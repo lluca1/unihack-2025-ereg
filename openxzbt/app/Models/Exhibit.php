@@ -15,6 +15,7 @@ class Exhibit extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'exposition_id',
         'user_id',
         'title',
         'description',
@@ -22,17 +23,24 @@ class Exhibit extends Model
         'media_path',
         'thumbnail_path',
         'mime_type',
+        'position',
     ];
 
     /**
-     * Get the expositions the exhibit is attached to ordered by pivot position.
-     */ 
-    public function expositions()
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'position' => 'integer',
+    ];
+
+    /**
+     * Get the exposition that owns the exhibit.
+     */
+    public function exposition()
     {
-        return $this->belongsToMany(Exposition::class)
-            ->withPivot('position')
-            ->withTimestamps()
-            ->orderByPivot('position');
+        return $this->belongsTo(Exposition::class);
     }
 
     /**

@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the expositions created by the user.
+     */
+    public function expositions()
+    {
+        return $this->hasMany(Exposition::class);
+    }
 }

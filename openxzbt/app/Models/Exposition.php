@@ -15,6 +15,7 @@ class Exposition extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
         'title',
         'description',
         'cover_image_path',
@@ -31,13 +32,18 @@ class Exposition extends Model
     ];
 
     /**
-     * Get the exhibits attached to the exposition ordered by pivot position.
+     * Get the user that owns the exposition.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the exhibits for the exposition ordered by position.
      */
     public function exhibits()
     {
-        return $this->belongsToMany(Exhibit::class)
-            ->withPivot('position')
-            ->withTimestamps()
-            ->orderByPivot('position');
+        return $this->hasMany(Exhibit::class)->orderBy('position');
     }
 }
