@@ -1,17 +1,15 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Expositions') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <livewire:expositions-manager />
-                </div>
-            </div>
+    <section class="pt-6 pb-10">
+        <div class="max-w-6xl mx-auto px-6 space-y-5">
+            <h1 class="text-4xl md:text-5xl font-semibold tracking-tight leading-[1.03]">
+                plan a new 3d exposition
+                <span class="text-zinc-400 block text-[18px] mt-1">give it a name, pick who can see it, set the mood. exhibits come later.</span>
+            </h1>
+            <p class="text-[12px] text-zinc-400 leading-relaxed max-w-3xl">
+                this page defines the exposition record—title, metadata, visibility. the realtime 3d client reads it and builds the rooms.
+            </p>
         </div>
-    </div>
+    </section>
+
+    <livewire:expositions-manager />
 </x-app-layout>

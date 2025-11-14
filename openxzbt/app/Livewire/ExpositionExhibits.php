@@ -5,10 +5,12 @@ namespace App\Livewire;
 use App\Models\Exposition;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+#[Layout('layouts.app')]
 class ExpositionExhibits extends Component
 {
     use WithFileUploads;
