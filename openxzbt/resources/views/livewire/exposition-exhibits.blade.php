@@ -18,7 +18,7 @@
             <label for="exhibit-description">Description</label>
             <textarea id="exhibit-description" wire:model.defer="description"></textarea>
             @error('description')
-                <div>{{ $message }}</div>
+                <div>{{ $message }}</div>       
             @enderror
         </div>
 
