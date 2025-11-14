@@ -25,7 +25,7 @@ class ExpositionExhibits extends Component
     #[Rule('nullable|string')]
     public string $description = '';
 
-    #[Rule('required|file|mimes:glb,fbx,obj|max:51200')]
+    #[Rule('required|file|mimes:obj|max:51200')]
     public $modelFile;
 
     public function mount(Exposition $exposition): void
