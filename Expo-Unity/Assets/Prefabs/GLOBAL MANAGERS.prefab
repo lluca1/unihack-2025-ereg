@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7337477383127000824}
   - component: {fileID: 2101266152501866195}
   - component: {fileID: 819035687202426259}
-  - component: {fileID: 5218620639197555837}
+  - component: {fileID: 479988014276501630}
   - component: {fileID: 8372881568834962691}
   m_Layer: 0
   m_Name: GLOBAL MANAGERS
@@ -85,7 +85,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 445a572cd213f124587369718b912120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneLoader
---- !u!114 &5218620639197555837
+--- !u!114 &479988014276501630
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,9 +94,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2018958099651161952}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b6b50287bce1a54192328d1ebf84eba, type: 3}
+  m_Script: {fileID: 11500000, guid: 34da0624f77fa334fa98bcde51071da5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DatabaseLoader
+  m_EditorClassIdentifier: Assembly-CSharp::ModelLoader
 --- !u!114 &8372881568834962691
 MonoBehaviour:
   m_ObjectHideFlags: 0

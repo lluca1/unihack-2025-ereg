@@ -52,7 +52,6 @@ public class FirstPersonController : MonoBehaviour
     private Vector2 currentLookInput;
 
     private float rotationX = 0;
-    private float rotationY = 0;
 
     private bool pressingJumpKey;
 

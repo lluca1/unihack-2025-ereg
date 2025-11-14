@@ -18,14 +18,14 @@ public class Exhibit : MonoBehaviour
         GameObject instance = Instantiate(model, transform);
         Destroy(model);
 
-        PivotCentering.CenterPivot(instance);
+        ModelUtility.CenterPivot(instance);
 
         for (int i = 0; i < instance.transform.childCount; i++)
         {
             instance.transform.GetChild(i).localPosition = Vector3.zero;
         }
 
-        ModelScaler.ScaleToTargetSize(instance, desiredModelSize);
+        ModelUtility.ScaleToTargetSize(instance, desiredModelSize);
 
         instance.transform.localPosition += standOffset;
 
@@ -36,6 +36,6 @@ public class Exhibit : MonoBehaviour
     {
         this.exhibitId = exhibitId;
 
-        GameManager.Instance.DatabaseLoader.LoadExhibit(expoId, exhibitId, Setup);
+        GameManager.Instance.ModelLoader.Load(Setup);
     }
 }
