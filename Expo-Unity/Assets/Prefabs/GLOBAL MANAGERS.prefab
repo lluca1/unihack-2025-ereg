@@ -96,12 +96,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5267867e015d7ea47a0fa0fd92c8156f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExpoManager
+  presetsData: {fileID: 11400000, guid: 546682317620716478ddd1841804fa99, type: 2}
   playerPrefab: {fileID: 3693825073759902978, guid: 432c3c282353ddc409b42157ca2bcfe5, type: 3}
   tilePrefab: {fileID: 5955623842777888700, guid: 2efdbf32eca5cc04c8a55086c83e9f7b, type: 3}
   exhibitPrefab: {fileID: 3467540078235444993, guid: e0c1520183baae1448b266dd4fe54766, type: 3}
   playerSpawnOffset: {x: 0, y: 1, z: 0}
   tileSpawnOffset: {x: 0, y: 0, z: 3}
   currentExpoId: 
+  usePresetSettings: 1
+  presetIndex: 0
   exhibitIds:
   - 1
   - 2

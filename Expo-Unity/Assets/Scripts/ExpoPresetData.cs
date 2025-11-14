@@ -5,12 +5,12 @@ using UnityEngine;
 public struct ExpoPreset
 {
     public string name;
-    public Texture floorTexture, ceilingTexture, wallTexture;
-    public Mesh stand, lamp;
+    public Color sunColor;
+    public Material floorTexture, ceilingTexture, wallTexture;
 }
 
 [CreateAssetMenu(fileName = "Expo Presets Settings", menuName = "Expo Data/Expo Presets Settings")]
 public class ExpoPresetData : ScriptableObject
 {
-    [SerializeField] private ExpoPreset[] presets;
+    public ExpoPreset[] Presets;
 }

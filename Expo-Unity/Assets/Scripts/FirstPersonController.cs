@@ -13,6 +13,7 @@ public class FirstPersonController : MonoBehaviour
 
     [Header("Look Parameters")]
     [SerializeField] private float mouseSensitivity = 25f;
+    [SerializeField] private float lookSmoothTime = 0.05f;
     [SerializeField, Range(1, 100)] private float upperLookLimit = 80.0f;
     [SerializeField, Range(1, 100)] private float lowerLookLimit = 80.0f;
 
@@ -47,6 +48,8 @@ public class FirstPersonController : MonoBehaviour
     private Vector3 moveDirection;
     private Vector2 moveInput;
     private Vector2 currentInput;
+    private Vector2 currentLookVelocity;
+    private Vector2 currentLookInput;
 
     private float rotationX = 0;
     private float rotationY = 0;
@@ -104,15 +107,23 @@ public class FirstPersonController : MonoBehaviour
     {
         Vector2 lookInput = InputManager.Controls.Player.Look.ReadValue<Vector2>();
 
-        float mouseX = lookInput.x * mouseSensitivity * Time.deltaTime;
-        float mouseY = lookInput.y * mouseSensitivity * Time.deltaTime;
+        currentLookInput = Vector2.SmoothDamp(
+                currentLookInput,
+                lookInput,
+                ref currentLookVelocity, // Passed by reference
+                lookSmoothTime
+            );
+
+
+        float mouseX = currentLookInput.x * mouseSensitivity * Time.deltaTime;
+        float mouseY = currentLookInput.y * mouseSensitivity * Time.deltaTime;
 
         rotationX -= mouseY;
+
         rotationX = Mathf.Clamp(rotationX, -upperLookLimit, lowerLookLimit);
         playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
 
-        rotationY += mouseX;
-        transform.rotation = Quaternion.Euler(0, rotationY, 0);
+        transform.Rotate(Vector3.up * mouseX);
     }
 
     private void HandleJump()

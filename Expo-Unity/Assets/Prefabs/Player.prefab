@@ -77,7 +77,7 @@ MonoBehaviour:
   useHeadbob: 1
   useFootsteps: 1
   walkSpeed: 6
-  mouseSensitivity: 25
+  mouseSensitivity: 10
   upperLookLimit: 80
   lowerLookLimit: 80
   jumpForce: 8

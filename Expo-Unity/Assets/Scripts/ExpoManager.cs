@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.SceneManagement;
 
 public class ExpoManager : MonoBehaviour
 {
+    [SerializeField] private ExpoPresetData presetsData;
+
     [SerializeField] private FirstPersonController playerPrefab;
     [SerializeField] private ExpoTile tilePrefab;
     [SerializeField] private Exhibit exhibitPrefab;
@@ -12,8 +15,10 @@ public class ExpoManager : MonoBehaviour
     [SerializeField] private Vector3 tileSpawnOffset;
 
     [Header("Debug")]
-    [SerializeField] private string currentExpoId; // set on load from menu
+    [SerializeField] private string currentExpoId;
 
+    [SerializeField] private bool usePresetSettings = true;
+    [SerializeField] private int presetIndex; 
     [SerializeField] private List<string> exhibitIds = new(); // loaded from database
 
     [SerializeField] private List<ExpoTile> createdTiles = new();
@@ -54,19 +59,35 @@ public class ExpoManager : MonoBehaviour
 
     private void CreateExpo()
     {
-        print("Create expo");
-
         // load exhibit ids from database where expo id == currentExpoId
+
+        if (usePresetSettings)
+        {
+            Light sun = FindFirstObjectByType<Light>();
+            sun.color = presetsData.Presets[presetIndex].sunColor;
+        }
 
         for (int i = 0; i < exhibitIds.Count; i++)
         {
             Vector3 pos = tileSpawnOffset + new Vector3(0, 0, createdTiles.Count * tilePrefab.GetSize());
 
             ExpoTile tile = Instantiate(tilePrefab, pos, Quaternion.identity);
+
+            if (usePresetSettings)
+            {
+                tile.LoadData(presetsData.Presets[presetIndex], presetIndex);
+            }
+            else
+            {
+                tile.LoadData(currentExpoId);
+            }
+
             createdTiles.Add(tile);
 
             Exhibit exhibit = Instantiate(exhibitPrefab, tile.transform.position, Quaternion.identity);
+
             exhibit.LoadData(exhibitIds[i]);
+
             createdExhibits.Add(exhibit);
         }
 
