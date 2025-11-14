@@ -1,26 +1,41 @@
 using UnityEngine;
+using System;
 
 public class Exhibit : MonoBehaviour
 {
-    private string id;
-    private Mesh mesh;
-    private Vector3 pos;
-    private Vector3 scale;
+    [SerializeField] private string exhibitId;
+    [SerializeField] private float desiredModelSize = 3f;
+    [SerializeField] private Vector3 standOffset;
 
-    private void Setup()
+    private void Setup(GameObject model)
     {
-        transform.localPosition += pos;
-        transform.localScale = scale;
+        if (model == null)
+        {
+            Debug.LogError($"Setup failed: Model data was null for {exhibitId}");
+            return;
+        }
+
+        GameObject instance = Instantiate(model, transform);
+        Destroy(model);
+
+        PivotCentering.CenterPivot(instance);
+
+        for (int i = 0; i < instance.transform.childCount; i++)
+        {
+            instance.transform.GetChild(i).localPosition = Vector3.zero;
+        }
+
+        ModelScaler.ScaleToTargetSize(instance, desiredModelSize);
+
+        instance.transform.localPosition += standOffset;
+
+        Debug.Log($"Exhibit {exhibitId} setup complete.");
     }
 
-    public void LoadData(string id)
+    public void LoadData(string expoId, string exhibitId)
     {
-        this.id = id;
+        this.exhibitId = exhibitId;
 
-        // Load from database
-        pos = new Vector3(0, 3, 0);
-        scale = Vector3.one;
-
-        Setup();
+        GameManager.Instance.DatabaseLoader.LoadExhibit(expoId, exhibitId, Setup);
     }
 }

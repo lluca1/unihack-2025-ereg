@@ -86,7 +86,7 @@ public class ExpoManager : MonoBehaviour
 
             Exhibit exhibit = Instantiate(exhibitPrefab, tile.transform.position, Quaternion.identity);
 
-            exhibit.LoadData(exhibitIds[i]);
+            exhibit.LoadData(currentExpoId ,exhibitIds[i]);
 
             createdExhibits.Add(exhibit);
         }

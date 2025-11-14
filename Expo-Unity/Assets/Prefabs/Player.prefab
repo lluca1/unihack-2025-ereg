@@ -78,6 +78,7 @@ MonoBehaviour:
   useFootsteps: 1
   walkSpeed: 6
   mouseSensitivity: 10
+  lookSmoothTime: 0.05
   upperLookLimit: 80
   lowerLookLimit: 80
   jumpForce: 8
@@ -376,7 +377,7 @@ Transform:
   m_GameObject: {fileID: 7719586543289217250}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

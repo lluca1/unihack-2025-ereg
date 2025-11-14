@@ -1,10 +1,15 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.Collections;
+using System.IO;
+using Dummiesman;
+using System;
+using static System.Net.WebRequestMethods;
 
 public class DatabaseLoader : MonoBehaviour
 {
-    private const string BASE_URL = "openxzbt.com";
+    private const string BASE_URL = "https://openxzbt.com/";
+    private const string OBJ_EXT = ".obj";
 
     private static DatabaseLoader instance;
 
@@ -20,48 +25,44 @@ public class DatabaseLoader : MonoBehaviour
         }
     }
 
-    public void Load(string expoId, string exhibitId)
+    public void LoadExhibit(string expoId, string exhibitId, Action<GameObject> onLoadedModel)
     {
-        // Now expecting an OBJ file
-        StartCoroutine(LoadObjModel(expoId, exhibitId));
+        StartCoroutine(LoadModelFromURL(expoId, exhibitId, onLoadedModel));
     }
 
-    private IEnumerator LoadObjModel(string expoId, string exhibitId)
+    private IEnumerator LoadModelFromURL(string expoId, string exhibitId, Action<GameObject> onLoadedModel)
     {
-        string objUrl = BASE_URL + "/api/" + expoId + "/" + exhibitId + ".obj";
+        //string objUrl = BASE_URL + "api/" + expoId + "/" + exhibitId + OBJ_EXT;
+        string objUrl = "https://cdn.jsdelivr.net/gh/mrdoob/three.js/examples/models/obj/male02/male02.obj";
 
-        using (UnityWebRequest objUWR = UnityWebRequest.Get(objUrl))
+        using (UnityWebRequest uwr = UnityWebRequest.Get(objUrl))
         {
-            yield return objUWR.SendWebRequest();
+            yield return uwr.SendWebRequest();
 
-            if (objUWR.result != UnityWebRequest.Result.Success)
+            if (uwr.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError("Error downloading OBJ file: " + objUWR.error);
+                Debug.LogError($"Error downloading OBJ file ({objUrl}): {uwr.error}");
+                onLoadedModel?.Invoke(null); // IMPORTANT: Invoke callback with null on failure
                 yield break;
             }
 
-            // Get the OBJ file contents as text
-            string objText = objUWR.downloadHandler.text;
+            try
+            {
+                byte[] objData = uwr.downloadHandler.data;
+                MemoryStream stream = new MemoryStream(objData);
 
-            // 2. Load the Model using the Importer Library
-            // The library will take the OBJ text, parse it, and construct a new GameObject.
+                GameObject loadedModel = new OBJLoader().Load(stream);
 
-            // Example of a hypothetical parsing call:
-            // GameObject loadedModel = ObjImporter.Parse(objText);
+                // Pass the temporary GameObject to the callback
+                onLoadedModel?.Invoke(loadedModel);
 
-            // You would also need to implement logic to download and pass the .mtl file 
-            // (material data) and any associated textures to the parser.
-
-            // Example instantiation:
-            // if (loadedModel != null)
-            // {
-            //     Instantiate(loadedModel, Vector3.zero, Quaternion.identity);
-            //     Debug.Log($"Successfully loaded OBJ model.");
-            // }
-            // else
-            // {
-            //     Debug.LogError("Failed to parse OBJ data.");
-            // }
+                Debug.Log($"Successfully loaded model data for: {exhibitId}");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"OBJ Importer Error on {exhibitId}: {e.Message}");
+                onLoadedModel?.Invoke(null); // Invoke callback with null on exception
+            }
         }
     }
 }
