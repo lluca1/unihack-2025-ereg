@@ -1,12 +1,15 @@
 <?php
 
-use App\Livewire\ExpositionExhibits;
-use App\Livewire\ExpositionsManager;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'welcome');
 
-Route::get('/expositions', ExpositionsManager::class)->name('expositions.index');
-Route::get('/expositions/{exposition}', ExpositionExhibits::class)->name('expositions.show');
+Route::view('dashboard', 'dashboard')
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
+Route::view('profile', 'profile')
+    ->middleware(['auth'])
+    ->name('profile');
+
+require __DIR__.'/auth.php';
