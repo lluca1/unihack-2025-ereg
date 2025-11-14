@@ -15,7 +15,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 text-xs">
         <div class="border border-zinc-700 bg-[#050608] rounded-none p-4 space-y-4">
             <h2 class="text-[12px] font-semibold tracking-tight text-zinc-100">upload new exhibit</h2>
-            <p class="text-[11px] text-zinc-500">drag a 3d model (glb, fbx, obj). we keep the file path so the 3d client can pull it later.</p>
+            <p class="text-[11px] text-zinc-500">drag a 3d model (obj). we keep the file path so the 3d client can pull it later.</p>
 
             <form wire:submit.prevent="save" enctype="multipart/form-data" class="space-y-4">
                 <div class="space-y-2">
@@ -47,12 +47,12 @@
                 </div>
 
                 <div class="space-y-2">
-                    <label for="model-file" class="block text-[11px] text-zinc-400">3d model (glb, fbx, obj)</label>
+                    <label for="model-file" class="block text-[11px] text-zinc-400">3d model (obj)</label>
                     <input
                         id="model-file"
                         type="file"
                         wire:model="modelFile"
-                        accept=".glb,.fbx,.obj"
+                        accept=".obj"
                         class="w-full text-[11px] file:mr-3 file:px-3 file:py-1 file:border-0 file:bg-[#072635] file:text-[#bae6fd] file:rounded-none border border-dashed border-zinc-700 bg-[#050608] text-zinc-400"
                     >
                     @error('modelFile')

@@ -68,7 +68,7 @@
                     <div class="mt-2 border border-zinc-700 rounded-none p-3 text-[10px] text-zinc-400 space-y-1">
                         <p>title: <span class="text-zinc-300">{{ $title !== '' ? $title : 'pending…' }}</span></p>
                         <p>status: <span class="text-zinc-300">{{ $is_public ? 'public' : 'private' }}</span></p>
-                        <p>description: <span class="text-zinc-300">{{ $description !== '' ? \Illuminate\Support\Str::limit($description, 60) : 'add a short vibe description' }}</span></p>
+                        <p>description: <span class="text-zinc-300">{{ $description !== '' ? \Illuminate\Support\Str::limit($description, 60) : 'add a short description' }}</span></p>
                         <p>expositions total: <span class="text-zinc-300">{{ $expositions->count() }}</span></p>
                     </div>
                 </div>
