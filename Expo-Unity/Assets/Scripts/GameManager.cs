@@ -1,8 +1,12 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public bool IsPaused { get; private set; }
+
+    public ExpoManager ExpoManager { get; private set; }
+    public SceneLoader SceneLoader { get; private set; }
 
     public static GameManager Instance;
 
@@ -16,5 +20,8 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        ExpoManager = GetComponent<ExpoManager>();
+        SceneLoader = GetComponent<SceneLoader>();
     }
 }

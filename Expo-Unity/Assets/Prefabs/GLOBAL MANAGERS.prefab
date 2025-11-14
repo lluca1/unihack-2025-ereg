@@ -9,8 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7093998633314458057}
+  - component: {fileID: -6414049895291332497}
   - component: {fileID: 7337477383127000824}
   - component: {fileID: 2101266152501866195}
+  - component: {fileID: 819035687202426259}
+  - component: {fileID: 8372881568834962691}
   m_Layer: 0
   m_Name: GLOBAL MANAGERS
   m_TagString: Untagged
@@ -33,6 +36,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-6414049895291332497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2018958099651161952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da3fb52f278720c4aba390e805c4fa1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DontDestroyOnLoad
 --- !u!114 &7337477383127000824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57,3 +72,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9b994d7c923313469f29d77046a60d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputManager
+--- !u!114 &819035687202426259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2018958099651161952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 445a572cd213f124587369718b912120, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneLoader
+--- !u!114 &8372881568834962691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2018958099651161952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5267867e015d7ea47a0fa0fd92c8156f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExpoManager
+  playerPrefab: {fileID: 3693825073759902978, guid: 432c3c282353ddc409b42157ca2bcfe5, type: 3}
+  tilePrefab: {fileID: 5955623842777888700, guid: 2efdbf32eca5cc04c8a55086c83e9f7b, type: 3}
+  exhibitPrefab: {fileID: 3467540078235444993, guid: e0c1520183baae1448b266dd4fe54766, type: 3}
+  playerSpawnOffset: {x: 0, y: 1, z: 0}
+  tileSpawnOffset: {x: 0, y: 0, z: 3}
+  currentExpoId: 
+  exhibitIds:
+  - 1
+  - 2
+  - 3
+  - 4
+  createdTiles: []
+  createdExhibits: []

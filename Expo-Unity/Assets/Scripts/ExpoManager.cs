@@ -1,16 +1,81 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ExpoManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private FirstPersonController playerPrefab;
+    [SerializeField] private ExpoTile tilePrefab;
+    [SerializeField] private Exhibit exhibitPrefab;
+
+    [SerializeField] private Vector3 playerSpawnOffset;
+    [SerializeField] private Vector3 tileSpawnOffset;
+
+    [Header("Debug")]
+    [SerializeField] private string currentExpoId; // set on load from menu
+
+    [SerializeField] private List<string> exhibitIds = new(); // loaded from database
+
+    [SerializeField] private List<ExpoTile> createdTiles = new();
+    [SerializeField] private List<Exhibit> createdExhibits = new();
+
+
+    private static ExpoManager instance;
+
+    private void Awake()
     {
-        
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-        
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode loadScene)
+    {
+        if (scene.buildIndex == SceneLoader.SCENE_INDEX_EXPO)
+        {
+            CreateExpo();
+        }
+    }
+
+    private void CreateExpo()
+    {
+        print("Create expo");
+
+        // load exhibit ids from database where expo id == currentExpoId
+
+        for (int i = 0; i < exhibitIds.Count; i++)
+        {
+            Vector3 pos = tileSpawnOffset + new Vector3(0, 0, createdTiles.Count * tilePrefab.GetSize());
+
+            ExpoTile tile = Instantiate(tilePrefab, pos, Quaternion.identity);
+            createdTiles.Add(tile);
+
+            Exhibit exhibit = Instantiate(exhibitPrefab, tile.transform.position, Quaternion.identity);
+            exhibit.LoadData(exhibitIds[i]);
+            createdExhibits.Add(exhibit);
+        }
+
+        Instantiate(playerPrefab, playerSpawnOffset, Quaternion.identity);
+    }
+
+    public void LoadExpo(string id)
+    {
+        currentExpoId = id;
+        GameManager.Instance.SceneLoader.LoadExpoScene();
     }
 }
