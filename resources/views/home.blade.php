@@ -54,11 +54,43 @@
                 </p>
             @endguest
 
-            <div class="mt-4 inline-flex items-center gap-2 px-3 py-1 border border-white/20 bg-[#111] text-[10px] text-white/50">
-                mode: home_dashboard
-            </div>
+            @php
+    $tips = [
+        'check your scale.',
+        'normals are wrong. they always are.',
+        'lighting fixes more than modeling does.',
+        'don’t trust viewport shading.',
+        'your scene has too many lights.',
+        'reduce your textures. you won’t notice.',
+        'test it in low light before calling it done.',
+        'glass is never as simple as you think.',
+        'your camera is probably in the wrong place.',
+        'bake it. then bake it again.',
+        'overdetailing is not detail.',
+        'your shadows are too soft.',
+        'stop smoothing everything.',
+        'check the silhouette, not the surface.',
+        'remove half your polygons. it will look the same.',
+        'reflections lie.',
+        'check the backfaces. someone will see them.',
+        'texture seams always find an audience.',
+        'realism starts with roughness.',
+        'your color grading is doing the heavy lifting.',
+    ];
+
+    $tip = $tips[array_rand($tips)];
+@endphp
+
+<div class="mt-4 inline-flex items-center gap-2 px-3 py-1 border border-white/20 bg-[#111] text-[10px] text-white/50">
+    tip: {{ $tip }}
+</div>
+
+
+
         </section>
 
+        {{-- SCAN FOR EXPOS@ (LIVEWIRE SEARCH) --}}
+        <livewire:expo-scan />
 
         {{-- YOUR EXHIBITIONS (LOGGED IN ONLY) --}}
         @auth
