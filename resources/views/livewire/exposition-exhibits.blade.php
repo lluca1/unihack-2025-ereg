@@ -25,74 +25,86 @@
         {{-- LEFT: SETTINGS / UPLOAD / THUMBNAIL --}}
         <div class="border border-zinc-700 bg-[#050608] rounded-none p-4 space-y-4">
             @if ($isOwner)
-                {{-- THUMBNAIL EDITOR --}}
-                <div class="space-y-2">
-                    <label class="block text-[11px] text-zinc-400" for="thumbnail">
-                        exposition thumbnail
-                    </label>
+                {{-- THUMBNAIL EDITOR TOGGLE --}}
+                <button
+                    type="button"
+                    wire:click="$toggle('showThumbnailEditor')"
+                    class="w-full flex items-center justify-between px-3 py-2 border border-zinc-700 hover:border-zinc-600 rounded-none bg-zinc-900/30 transition"
+                >
+                    <span class="text-[12px] font-semibold tracking-tight text-zinc-100">exposition thumbnail</span>
+                    <span class="text-[10px] text-zinc-500">{{ $showThumbnailEditor ? '▼' : '▶' }}</span>
+                </button>
 
-                    <input
-                        id="thumbnail"
-                        type="file"
-                        accept="image/*"
-                        wire:model="thumbnail"
-                        class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
-                    >
+                @if ($showThumbnailEditor)
+                    {{-- THUMBNAIL EDITOR --}}
+                    <div class="space-y-2 border border-zinc-700 rounded-none p-3 bg-zinc-900/20">
+                        <label class="block text-[11px] text-zinc-400" for="thumbnail">
+                            select image file
+                        </label>
 
-                    <p class="text-[10px] text-zinc-500">
-                        used on cards & listings. 4:3 aspect ratio recommended. max 4 MB.
-                    </p>
+                        <input
+                            id="thumbnail"
+                            type="file"
+                            accept="image/*"
+                            wire:model="thumbnail"
+                            class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                        >
 
-                    @error('thumbnail')
-                        <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
-                    @enderror
+                        <p class="text-[10px] text-zinc-500">
+                            used on cards & listings. 4:3 aspect ratio recommended. max 4 MB.
+                        </p>
 
-                    {{-- PREVIEW: NEW UPLOAD OR EXISTING COVER --}}
-                    <div class="mt-2 border border-zinc-700 rounded-none p-2">
-                        <p class="text-[10px] text-zinc-500 mb-2">thumbnail preview</p>
+                        @error('thumbnail')
+                            <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                        @enderror
 
-                        <div class="w-full bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center overflow-hidden"
-                             style="aspect-ratio: 4 / 3;">
-                            @if ($thumbnail)
-                                {{-- livewire temporary upload preview --}}
-                                <img
-                                    src="{{ $thumbnail->temporaryUrl() }}"
-                                    alt="thumbnail preview"
-                                    class="w-full h-full object-cover"
+                        {{-- PREVIEW: NEW UPLOAD OR EXISTING COVER --}}
+                        <div class="mt-2 border border-zinc-700 rounded-none p-2">
+                            <p class="text-[10px] text-zinc-500 mb-2">thumbnail preview</p>
+
+                            <div class="w-full bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center overflow-hidden"
+                                 style="aspect-ratio: 4 / 3;">
+                                @if ($thumbnail)
+                                    {{-- livewire temporary upload preview --}}
+                                    <img
+                                        src="{{ $thumbnail->temporaryUrl() }}"
+                                        alt="thumbnail preview"
+                                        class="w-full h-full object-cover"
+                                    >
+                                @elseif ($exposition->cover_image_path)
+                                    {{-- existing saved cover --}}
+                                    <img
+                                        src="{{ \Illuminate\Support\Facades\Storage::url($exposition->cover_image_path) }}"
+                                        alt="{{ $exposition->title }} cover"
+                                        class="w-full h-full object-cover"
+                                    >
+                                @else
+                                    <span class="text-[10px] text-zinc-500">no thumbnail yet</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2 pt-1">
+                            <button
+                                type="button"
+                                wire:click="saveThumbnail"
+                                class="px-3 py-1 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717] text-[11px]"
+                            >
+                                :: UPDATE THUMBNAIL
+                            </button>
+
+                            @if ($exposition->cover_image_path)
+                                <button
+                                    type="button"
+                                    wire:click="clearThumbnail"
+                                    class="px-3 py-1 border border-zinc-600 text-zinc-200 rounded-none hover:bg-zinc-800/60 text-[11px]"
                                 >
-                            @elseif ($exposition->cover_image_path)
-                                {{-- existing saved cover --}}
-                                <img
-                                    src="{{ \Illuminate\Support\Facades\Storage::url($exposition->cover_image_path) }}"
-                                    alt="{{ $exposition->title }} cover"
-                                    class="w-full h-full object-cover"
-                                >
-                            @else
-                                <span class="text-[10px] text-zinc-500">no thumbnail yet</span>
+                                    :: REMOVE THUMBNAIL
+                                </button>
                             @endif
                         </div>
                     </div>
-
-                    <div class="flex gap-2 pt-1">
-                        <button
-                            type="button"
-                            wire:click="saveThumbnail"
-                            class="px-3 py-1 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717] text-[11px]"
-                        >
-                            :: UPDATE THUMBNAIL
-                        </button>
-
-                        @if ($exposition->cover_image_path)
-                            <button
-                                type="button"
-                                wire:click="clearThumbnail"
-                                class="px-3 py-1 border border-zinc-600 text-zinc-200 rounded-none hover:bg-zinc-800/60 text-[11px]"
-                            >
-                                :: REMOVE THUMBNAIL
-                            </button>
-                        @endif
-                    </div>
-                </div>
+                @endif
 
                 {{-- THEME PRESET --}}
                 @php($themeLabels = [-1=>'default',0=>'classic',1=>'medieval',2=>'scifi'])

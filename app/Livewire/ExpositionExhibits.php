@@ -23,6 +23,8 @@ class ExpositionExhibits extends Component
 
     public bool $isOwner = false;
 
+    public bool $showThumbnailEditor = false;
+
     #[Rule('required|string|max:255')]
     public string $title = '';
 
