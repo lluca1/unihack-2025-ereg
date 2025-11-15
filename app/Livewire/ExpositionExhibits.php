@@ -79,7 +79,7 @@ class ExpositionExhibits extends Component
         ]);
 
         $folder = 'models/'.$exhibit->id;
-        $filename = (string) $this->exposition->id;
+        $filename = (string) $exhibit->id;
 
         Storage::disk('public')->makeDirectory($folder);
 
