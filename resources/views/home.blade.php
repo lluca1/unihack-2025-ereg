@@ -1,9 +1,4 @@
 {{-- resources/views/home.blade.php --}}
-@php
-    use Illuminate\Support\Str;
-    use Illuminate\Support\Facades\Storage;
-@endphp
-
 <x-app-layout>
 
     {{-- PAGE HEADER --}}
@@ -109,41 +104,16 @@
 
                     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         @foreach ($yourExpositions as $expo)
-                            <article class="border border-white/15 bg-[#090909] p-0">
-
-                                {{-- IMAGE --}}
-                                @if ($expo->cover_image_path)
-                                    <img src="{{ Storage::url($expo->cover_image_path) }}"
-                                         class="w-full h-40 object-cover border-b border-white/10">
-                                @else
-                                    <div class="w-full h-40 flex items-center justify-center text-white/20 border-b border-white/10">
-                                        no image
-                                    </div>
-                                @endif
-
-                                {{-- BODY --}}
-                                <div class="p-4 space-y-3">
-
-                                    <h4 class="text-white text-sm font-medium tracking-tight truncate">
-                                        {{ $expo->title }}
-                                    </h4>
-
-                                    <p class="text-xs text-white/40 leading-relaxed line-clamp-3">
-                                        {{ $expo->description ? Str::limit($expo->description, 140) : 'no description provided.' }}
-                                    </p>
-
-                                    <div class="flex items-center justify-between text-[10px] text-white/40">
-                                        <span>id: <span class="text-white">{{ $expo->id }}</span></span>
-                                        <span>{{ $expo->created_at->diffForHumans() }}</span>
-                                    </div>
-
-                                    <a href="{{ route('expositions.show', $expo) }}"
-                                       class="block text-xs px-3 py-1 border border-[#38bdf8]/40 text-[#bae6fd] bg-[#072635] mt-2">
-                                        manage_exposition →
-                                    </a>
-                                </div>
-
-                            </article>
+                            <x-exposition.card
+                                :exposition="$expo"
+                                :index="$loop->iteration"
+                                :description-limit="140"
+                            >
+                                <a href="{{ route('expositions.show', $expo) }}"
+                                   class="border border-zinc-600 hover:border-zinc-300 px-3 py-1 text-left rounded-none">
+                                    :: MANAGE EXHIBITS
+                                </a>
+                            </x-exposition.card>
                         @endforeach
                     </div>
 
@@ -166,57 +136,23 @@
             @if(isset($expositions) && $expositions->isNotEmpty())
                 <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ($expositions as $expo)
-                        <article class="border border-white/15 bg-[#090909] p-0">
-
-                            {{-- IMAGE --}}
-                            @if ($expo->cover_image_path)
-                                <img src="{{ Storage::url($expo->cover_image_path) }}"
-                                     class="w-full h-40 object-cover border-b border-white/10">
+                        <x-exposition.card
+                            :exposition="$expo"
+                            :index="$loop->iteration"
+                            :description-limit="140"
+                        >
+                            @guest
+                                <a href="{{ route('login') }}"
+                                   class="border border-white/30 text-white px-3 py-1 rounded-none">
+                                    login_to_view →
+                                </a>
                             @else
-                                <div class="w-full h-40 flex items-center justify-center text-white/20 border-b border-white/10">
-                                    no image
-                                </div>
-                            @endif
-
-                            {{-- BODY --}}
-                            <div class="p-4 space-y-3">
-
-                                <div class="flex items-center justify-between">
-                                    <h4 class="text-sm text-white font-medium tracking-tight truncate">
-                                        {{ $expo->title }}
-                                    </h4>
-
-                                    @if($expo->user)
-                                        <span class="text-[10px] text-white/40 truncate">
-                                            by {{ $expo->user->name }}
-                                        </span>
-                                    @endif
-                                </div>
-
-                                <p class="text-xs text-white/40 leading-relaxed line-clamp-3">
-                                    {{ $expo->description ? Str::limit($expo->description, 140) : 'no summary available.' }}
-                                </p>
-
-                                <div class="flex items-center justify-between text-[10px] text-white/40">
-                                    <span>id: <span class="text-white">{{ $expo->id }}</span></span>
-                                    <span>{{ $expo->created_at->format('d M Y') }}</span>
-                                </div>
-
-                                @guest
-                                    <a href="{{ route('login') }}"
-                                       class="block text-xs px-3 py-1 border border-white/30 bg-[#141414] text-white mt-2">
-                                        login_to_view →
-                                    </a>
-                                @else
-                                    <a href="{{ route('expositions.show', $expo) }}"
-                                       class="block text-xs px-3 py-1 border border-[#f97373]/70 bg-[#5b1010] text-[#ffecec] mt-2">
-                                       view_details →
-                                    </a>
-                                @endguest
-
-                            </div>
-
-                        </article>
+                                <a href="{{ route('expositions.show', $expo) }}"
+                                   class="border border-[#f97373]/70 bg-[#5b1010] text-[#ffecec] px-3 py-1 rounded-none hover:bg-[#7f1717]/80 text-left">
+                                    view_details →
+                                </a>
+                            @endguest
+                        </x-exposition.card>
                     @endforeach
                 </div>
             @else

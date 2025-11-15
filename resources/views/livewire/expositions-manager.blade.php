@@ -166,53 +166,11 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
                 @foreach ($yourExpositions as $exposition)
-                    <article
-                        class="border border-zinc-700 hover:border-zinc-300 transition bg-[#050608] rounded-none p-4 flex flex-col gap-3"
+                    <x-exposition.card
+                        :exposition="$exposition"
+                        :index="$loop->iteration"
                         wire:key="your-exposition-{{ $exposition->id }}"
-                    >
-                        <div class="w-full bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500 overflow-hidden" style="aspect-ratio: 4 / 3;">
-                            @if ($exposition->cover_image_path)
-                                <img
-                                    src="{{ \Illuminate\Support\Facades\Storage::url($exposition->cover_image_path) }}"
-                                    alt="{{ $exposition->title }} cover"
-                                    class="w-full h-full object-cover"
-                                >
-                            @else
-                                preview_placeholder
-                            @endif
-                        </div>
-
-                        <span class="text-zinc-200">
-                            {{ '['.str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) . ']' }}
-                            {{ strtoupper($exposition->title) }}
-                        </span>
-
-                        <p class="text-[11px] text-zinc-400 line-clamp-3">
-                            {{ $exposition->description ?: 'no description yet — add a short note.' }}
-                        </p>
-
-                        <div class="flex flex-col gap-1 text-[10px] text-zinc-500">
-                            <span>curator:
-                                <span class="text-zinc-300">
-                                    {{ '@'.($exposition->user?->name ? \Illuminate\Support\Str::slug($exposition->user->name, '_') : 'anonymous') }}
-                                </span>
-                            </span>
-                            <span>exhibits: {{ $exposition->exhibits_count }}</span>
-                            <span>status: {{ $exposition->is_public ? 'public' : 'private' }}</span>
-                        </div>
-
-                        <div class="flex flex-col gap-2 mt-2">
-                            <a href="{{ route('expositions.show', $exposition) }}"
-                               class="border border-zinc-600 hover:border-zinc-300 px-3 py-1 text-left rounded-none">
-                                :: MANAGE EXHIBITS
-                            </a>
-                            <button type="button"
-                                    wire:click="delete({{ $exposition->id }})"
-                                    class="border border-[#f97373]/80 text-[#ffecec] px-3 py-1 rounded-none hover:bg-[#5b1010]/50">
-                                :: DELETE EXPOSITION
-                            </button>
-                        </div>
-                    </article>
+                    />
                 @endforeach
             </div>
         </div>
@@ -228,48 +186,16 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
                 @foreach ($otherExpositions as $exposition)
-                    <article
-                        class="border border-zinc-700 hover:border-zinc-300 transition bg-[#050608] rounded-none p-4 flex flex-col gap-3"
+                    <x-exposition.card
+                        :exposition="$exposition"
+                        :index="$loop->iteration"
                         wire:key="other-exposition-{{ $exposition->id }}"
                     >
-                        <div class="w-full bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500 overflow-hidden" style="aspect-ratio: 4 / 3;">
-                            @if ($exposition->cover_image_path)
-                                <img
-                                    src="{{ \Illuminate\Support\Facades\Storage::url($exposition->cover_image_path) }}"
-                                    alt="{{ $exposition->title }} cover"
-                                    class="w-full h-full object-cover"
-                                >
-                            @else
-                                preview_placeholder
-                            @endif
-                        </div>
-
-                        <span class="text-zinc-200">
-                            {{ '['.str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) . ']' }}
-                            {{ strtoupper($exposition->title) }}
-                        </span>
-
-                        <p class="text-[11px] text-zinc-400 line-clamp-3">
-                            {{ $exposition->description ?: 'no description yet — add a short note.' }}
-                        </p>
-
-                        <div class="flex flex-col gap-1 text-[10px] text-zinc-500">
-                            <span>curator:
-                                <span class="text-zinc-300">
-                                    {{ '@'.($exposition->user?->name ? \Illuminate\Support\Str::slug($exposition->user->name, '_') : 'anonymous') }}
-                                </span>
-                            </span>
-                            <span>exhibits: {{ $exposition->exhibits_count }}</span>
-                            <span>status: {{ $exposition->is_public ? 'public' : 'private' }}</span>
-                        </div>
-
-                        <div class="flex flex-col gap-2 mt-2">
-                            <a href="{{ route('expositions.show', $exposition) }}"
-                               class="border border-[#f97373]/70 bg-[#5b1010] text-[#ffecec] px-3 py-1 rounded-none hover:bg-[#7f1717]/80 text-left">
-                                view_details →
-                            </a>
-                        </div>
-                    </article>
+                        <a href="{{ route('expositions.show', $exposition) }}"
+                           class="border border-[#f97373]/70 bg-[#5b1010] text-[#ffecec] px-3 py-1 rounded-none hover:bg-[#7f1717]/80 text-left">
+                            view_details →
+                        </a>
+                    </x-exposition.card>
                 @endforeach
             </div>
         </div>
