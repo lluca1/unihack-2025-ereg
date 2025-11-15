@@ -13,137 +13,143 @@
     <body class="bg-[#050608] text-zinc-100 antialiased min-h-screen">
         <div class="min-h-screen flex flex-col">
             <header class="fixed top-0 left-0 w-full bg-black/95 border-b border-white/15 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+                <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
 
-        {{-- LEFT SIDE --}}
-        <div class="flex items-center gap-3">
-            <span class="text-lg text-white tracking-tight font-semibold">openxzbt</span>
+                    {{-- LEFT SIDE --}}
+                    <div class="flex items-center gap-3">
+                        <span class="text-lg text-white tracking-tight font-semibold">openxzbt</span>
 
-            <span class="text-[11px] text-white/40">
-                :: 
-                @if(request()->routeIs('login'))
-                    auth_login
-                @elseif(request()->routeIs('register'))
-                    auth_register
-                @elseif(request()->routeIs('home'))
-                    home
-                @elseif(request()->routeIs('profile'))
-                    profile_editor
-                @else
-                    3d_exposition_index
-                @endif
-            </span>
-        </div>
+                        <span class="text-[11px] text-white/40">
+                            :: 
+                            @if(request()->routeIs('login'))
+                                auth_login
+                            @elseif(request()->routeIs('register'))
+                                auth_register
+                            @elseif(request()->routeIs('home'))
+                                home
+                            @elseif(request()->routeIs('profile'))
+                                profile_editor
+                            @else
+                                3d_exposition_index
+                            @endif
+                        </span>
+                    </div>
 
-        @php
-            // Active vs inactive nav style helper
-            $nav = function ($route) {
-                return request()->routeIs($route)
-                    ? 'border-[#facc15]/90 bg-[#26220b] text-[#fef3c7]'
-                    : 'border-white/30 text-white/60 hover:text-white';
-            };
+                    @php
+                        // Active vs inactive nav style helper
+                        $nav = function ($route) {
+                            return request()->routeIs($route)
+                                ? 'border-[#facc15]/90 bg-[#26220b] text-[#fef3c7]'
+                                : 'border-white/30 text-white/60 hover:text-white';
+                        };
 
-            $navRed = function ($route) {
-                return request()->routeIs($route)
-                    ? 'border-[#f87171]/80 bg-[#3b0d0d] text-[#fecaca]'
-                    : 'border-white/30 text-white/60 hover:text-white';
-            };
-        @endphp
+                        $navRed = function ($route) {
+                            return request()->routeIs($route)
+                                ? 'border-[#f87171]/80 bg-[#3b0d0d] text-[#fecaca]'
+                                : 'border-white/30 text-white/60 hover:text-white';
+                        };
+                    @endphp
 
-        {{-- ============================================================
-            NAVIGATION LOGIC:
-            If on login/register → show HOME + SIGN UP only
-          ============================================================ --}}
-        @if(request()->routeIs('login') || request()->routeIs('register'))
-            <nav class="hidden md:flex items-center gap-2 text-xs">
+                    {{-- ============================================================
+                        NAVIGATION LOGIC:
+                        If on login/register → show HOME + SIGN UP only
+                      ============================================================ --}}
+                    @if(request()->routeIs('login') || request()->routeIs('register'))
+                        <nav class="hidden md:flex items-center gap-2 text-xs">
 
-                {{-- HOME --}}
-                <a href="{{ route('home') }}"
-                   class="px-3 py-1 border tracking-tight rounded-none transition {{ $navRed('home') }}">
-                    [*] HOME
-                </a>
+                            {{-- HOME --}}
+                            <a href="{{ route('home') }}"
+                               class="px-3 py-1 border tracking-tight rounded-none transition {{ $navRed('home') }}">
+                                [*] HOME
+                            </a>
 
-                {{-- SIGN UP --}}
-                <a href="{{ route('register') }}"
-                   class="px-3 py-1 border tracking-tight rounded-none transition
-                          {{ request()->routeIs('register')
-                                ? 'border-[#22c55e]/70 bg-[#052713] text-[#bbf7d0]'
-                                : 'border-white/30 text-white/60 hover:text-white' }}">
-                    [+] SIGN_UP
-                </a>
+                            {{-- SIGN UP --}}
+                            <a href="{{ route('register') }}"
+                               class="px-3 py-1 border tracking-tight rounded-none transition
+                                      {{ request()->routeIs('register')
+                                            ? 'border-[#22c55e]/70 bg-[#052713] text-[#bbf7d0]'
+                                            : 'border-white/30 text-white/60 hover:text-white' }}">
+                                [+] SIGN_UP
+                            </a>
 
-            </nav>
+                        </nav>
 
-        @else
-        {{-- ============================================================
-            NORMAL NAVIGATION FOR THE REST OF THE SITE
-          ============================================================ --}}
-            <nav class="hidden md:flex items-center gap-2 text-xs">
+                    @else
+                    {{-- ============================================================
+                        NORMAL NAVIGATION FOR THE REST OF THE SITE
+                      ============================================================ --}}
+                        <nav class="hidden md:flex items-center gap-2 text-xs">
 
-                {{-- HOME --}}
-                <a href="{{ route('home') }}"
-                   class="px-3 py-1 border tracking-tight rounded-none transition {{ $navRed('home') }}">
-                    [*] HOME
-                </a>
+                            {{-- HOME --}}
+                            <a href="{{ route('home') }}"
+                               class="px-3 py-1 border tracking-tight rounded-none transition {{ $navRed('home') }}">
+                                [*] HOME
+                            </a>
 
-                {{-- CREATE EXPOSITION ALWAYS VISIBLE --}}
-                <a href="{{ auth()->check() ? route('dashboard') : route('login') }}"
-                   class="px-3 py-1 border tracking-tight rounded-none transition {{ $nav('dashboard') }}">
-                    [+] CREATE_EXPOSITION
-                </a>
+                            {{-- CREATE EXPOSITION ALWAYS VISIBLE --}}
+                            <a href="{{ auth()->check() ? route('dashboard') : route('login') }}"
+                               class="px-3 py-1 border tracking-tight rounded-none transition {{ $nav('dashboard') }}">
+                                [+] CREATE_EXPOSITION
+                            </a>
 
-                {{-- PROFILE (only logged in) --}}
-                @auth
-                <a href="{{ route('profile') }}"
-                   class="px-3 py-1 border tracking-tight rounded-none transition {{ $nav('profile') }}">
-                    [@] PROFILE
-                </a>
-                @endauth
+                            {{-- PROFILE (only logged in) --}}
+                            @auth
+                            <a href="{{ route('profile') }}"
+                               class="px-3 py-1 border tracking-tight rounded-none transition {{ $nav('profile') }}">
+                                [@] PROFILE
+                            </a>
+                            @endauth
 
-            </nav>
-        @endif
+                        </nav>
+                    @endif
 
 
-        {{-- ============================================================
-            RIGHT SIDE: LOGIN / LOGOUT / GRAVATAR
-          ============================================================ --}}
-        <div class="flex items-center gap-3 text-xs">
+                    {{-- ============================================================
+                        RIGHT SIDE: LOGIN / LOGOUT / AVATAR
+                      ============================================================ --}}
+                    <div class="flex items-center gap-3 text-xs">
 
-            @auth
-                {{-- USER PANEL --}}
-                <div class="hidden md:flex flex-col text-right leading-tight">
-                    <span class="text-white/70">{{ auth()->user()->name }}</span>
-                    <span class="text-white/40">
-                        {{ '@'.(auth()->user()->username ?? \Illuminate\Support\Str::slug(auth()->user()->name, '_')) }}
-                    </span>
+                        @auth
+                            {{-- USER PANEL --}}
+                            <div class="hidden md:flex flex-col text-right leading-tight">
+                                <span class="text-white/70">{{ auth()->user()->name }}</span>
+                                <span class="text-white/40">
+                                    {{ '@'.(auth()->user()->username ?? \Illuminate\Support\Str::slug(auth()->user()->name, '_')) }}
+                                </span>
+                            </div>
+
+                            <form method="POST" action="{{ route('logout') }}" class="hidden md:block">
+                                @csrf
+                                <button type="submit"
+                                    class="px-4 py-4 text-xs text-white border border-white/30 bg-[#141414] hover:bg-[#1e1e1e] rounded-none">
+                                    LOGOUT
+                                </button>
+                            </form>
+
+                        @else
+                            {{-- GUEST MODE --}}
+                            @if(!request()->routeIs('login') && !request()->routeIs('register'))
+                                <a href="{{ route('login') }}"
+                                   class="px-4 py-4 text-xs text-white border border-white/30 bg-[#141414] hover:bg-[#1e1e1e] rounded-none">
+                                    LOGIN
+                                </a>
+                            @endif
+                        @endauth
+
+                        {{-- AVATAR --}}
+                        <div class="h-12 w-12 bg-[#111] flex items-center justify-center overflow-hidden rounded-none">
+                            <img
+                                src="{{ asset('assets/img/you-avatar.png') }}"
+                                alt="avatar"
+                                class="w-full h-full object-cover object-top opacity-90"
+                                style="object-position: center 20%;"
+                            >
+                        </div>
+
+                    </div>
+
                 </div>
-
-                <form method="POST" action="{{ route('logout') }}" class="hidden md:block">
-                    @csrf
-                    <button type="submit"
-                        class="px-4 py-1 text-xs text-white border border-white/30 bg-[#141414] hover:bg-[#1e1e1e] rounded-none">
-                        LOGOUT
-                    </button>
-                </form>
-
-            @else
-                {{-- GUEST MODE --}}
-                @if(!request()->routeIs('login') && !request()->routeIs('register'))
-                    <a href="{{ route('login') }}"
-                       class="px-4 py-1 text-xs text-white border border-white/30 bg-[#141414] hover:bg-[#1e1e1e] rounded-none">
-                        LOGIN
-                    </a>
-                @endif
-            @endauth
-
-            <div class="h-10 w-10 border border-white/30 bg-[#111] text-white/40 text-[10px] flex items-center justify-center rounded-none">
-                :|
-            </div>
-
-        </div>
-
-    </div>
-</header>
+            </header>
 
 
 
@@ -151,25 +157,47 @@
                 {{ $slot }}
             </main>
 
-            <footer class="border-t border-zinc-800 py-5 text-[11px] text-zinc-400">
-                <div class="max-w-6xl mx-auto px-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <div class="border border-[#f97373]/70 bg-[#5b1010] text-[#ffecec] px-3 py-2 rounded-none max-w-xs">
-                        <div class="flex items-center justify-between text-[10px]">
-                            <span class="font-semibold text-[12px]">openxzbt</span>
-                            <span>exposition_console</span>
-                        </div>
-                        <p class="mt-1">
-                            this exposition record only stores metadata. the real rooms live in 3D.
-                        </p>
-                    </div>
+            {{-- ============================================================
+                FOOTER
+              ============================================================ --}}
+            <footer class="border-t border-zinc-800 py-6 text-[11px] text-white/60">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col items-center gap-4 text-center">
 
-                    <div class="flex flex-wrap gap-2 text-white/70">
-                        <span class="px-3 py-1 border border-[#38bdf8]/70 bg-[#072635] rounded-none">endpoint: /expositions</span>
-                        <span class="px-3 py-1 border border-[#22c55e]/70 bg-[#052713] rounded-none">mode: exposition_config</span>
-                        <span class="px-3 py-1 border border-[#facc15]/70 bg-[#26220b] rounded-none">status: experimental</span>
-                    </div>
-                </div>
-            </footer>
+        {{-- SHORT DESCRIPTION --}}
+        <p class="max-w-2xl text-white/50 leading-relaxed">
+            openxzbt is a minimal web console for creating and managing 3D art expositions.
+            artwork metadata and layout live here — the actual museum is generated and explored
+            inside the unity viewer.
+        </p>
+
+        {{-- COLORED STATUS TAGS --}}
+        <div class="flex flex-wrap justify-center gap-3">
+            <span class="px-3 py-1 border border-[#38bdf8]/70 bg-[#072635] rounded-none">
+                endpoint: /expositions
+            </span>
+
+            <span class="px-3 py-1 border border-[#22c55e]/70 bg-[#052713] rounded-none">
+                build: {{ now()->format('Y-m-d') }}
+            </span>
+
+            <span class="px-3 py-1 border border-[#facc15]/70 bg-[#26220b] rounded-none">
+                status: experimental
+            </span>
+
+            <span class="px-3 py-1 border border-[#f97373]/70 bg-[#5b1010] rounded-none">
+                unity_client_required
+            </span>
+        </div>
+
+        {{-- SUBTEXT --}}
+        <p class="text-white/30 text-[10px]">
+            openxzbt alpha — hackathon prototype
+        </p>
+    </div>
+</footer>
+
+
+
         </div>
 
         @stack('modals')
