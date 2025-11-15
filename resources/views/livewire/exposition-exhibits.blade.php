@@ -99,7 +99,6 @@
 
                     <div class="space-y-2">
                         <label for="texture-files" class="block text-[11px] text-zinc-400">texture files (png, jpg, webp)</label>
-                        <p class="text-[10px] text-zinc-500">filenames stay untouched so the .mtl references keep working.</p>
                         <input
                             id="texture-files"
                             type="file"
