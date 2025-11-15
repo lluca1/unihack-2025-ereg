@@ -20,6 +20,7 @@ class Exposition extends Model
         'description',
         'cover_image_path',
         'is_public',
+        'preset_theme',
     ];
 
     /**
@@ -29,6 +30,7 @@ class Exposition extends Model
      */
     protected $casts = [
         'is_public' => 'boolean',
+        'preset_theme' => 'integer',
     ];
 
     /**

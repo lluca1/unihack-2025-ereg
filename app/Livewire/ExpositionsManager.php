@@ -23,6 +23,9 @@ class ExpositionsManager extends Component
     #[Rule('boolean')]
     public bool $is_public = true;
 
+    #[Rule('integer|in:-1,0,1,2')]
+    public int $preset_theme = -1;
+
     public function mount(): void
     {
         $this->loadExpositions();
@@ -49,10 +52,12 @@ class ExpositionsManager extends Component
             'title' => $this->title,
             'description' => $this->description ?: null,
             'is_public' => $this->is_public,
+            'preset_theme' => $this->preset_theme,
         ]);
 
-        $this->reset(['title', 'description', 'is_public']);
+        $this->reset(['title', 'description', 'is_public', 'preset_theme']);
         $this->is_public = true;
+        $this->preset_theme = -1;
 
         $this->loadExpositions();
     }

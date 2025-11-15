@@ -95,6 +95,19 @@ class ExpositionExhibits extends Component
         $this->exposition->refresh();
     }
 
+    public function setPresetTheme(int $value): void
+    {
+        $this->ensureExpositionOwner();
+
+        if (! in_array($value, [-1, 0, 1, 2], true)) {
+            return;
+        }
+
+        $this->exposition->preset_theme = $value;
+        $this->exposition->save();
+        $this->exposition->refresh();
+    }
+
     private function loadExhibits(): void
     {
         $this->exhibits = $this->exposition->exhibits()->get();

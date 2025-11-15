@@ -49,6 +49,27 @@
                     </div>
 
                     <div class="space-y-2">
+                        <label class="block text-[11px] text-zinc-400">preset theme</label>
+                        <div class="flex flex-wrap gap-2 text-[11px]">
+                            <button type="button" wire:click="$set('preset_theme', -1)" class="px-3 py-1 border rounded-none {{ $preset_theme === -1 ? 'border-zinc-400 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
+                                default (-1)
+                            </button>
+                            <button type="button" wire:click="$set('preset_theme', 0)" class="px-3 py-1 border rounded-none {{ $preset_theme === 0 ? 'border-zinc-300 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
+                                0 classic
+                            </button>
+                            <button type="button" wire:click="$set('preset_theme', 1)" class="px-3 py-1 border rounded-none {{ $preset_theme === 1 ? 'border-zinc-300 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
+                                1 medieval
+                            </button>
+                            <button type="button" wire:click="$set('preset_theme', 2)" class="px-3 py-1 border rounded-none {{ $preset_theme === 2 ? 'border-zinc-300 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
+                                2 scifi
+                            </button>
+                        </div>
+                        @error('preset_theme')
+                            <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="space-y-2">
                         <label class="block text-[11px] text-zinc-400">exposition actions</label>
                         <div class="flex flex-col md:flex-row gap-2">
                             <button type="submit" class="px-4 py-2 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717]">
@@ -69,6 +90,8 @@
                         <p>title: <span class="text-zinc-300">{{ $title !== '' ? $title : 'pending…' }}</span></p>
                         <p>status: <span class="text-zinc-300">{{ $is_public ? 'public' : 'private' }}</span></p>
                         <p>description: <span class="text-zinc-300">{{ $description !== '' ? \Illuminate\Support\Str::limit($description, 60) : 'add a short description' }}</span></p>
+                        @php($themeLabels = [-1=>'default',0=>'classic',1=>'medieval',2=>'scifi'])
+                        <p>preset theme: <span class="text-zinc-300">{{ $themeLabels[$preset_theme] ?? 'default' }} ({{ $preset_theme }})</span></p>
                         <p>expositions total: <span class="text-zinc-300">{{ $expositions->count() }}</span></p>
                     </div>
                 </div>
