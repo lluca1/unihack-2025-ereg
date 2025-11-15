@@ -6,6 +6,7 @@ use App\Models\Exposition;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
@@ -34,6 +35,9 @@ class ExpositionExhibits extends Component
     #[Rule('required|file|mimes:mtl|max:51200')]
     public $materialFile;
 
+    #[Rule('nullable|array|max:10')]
+    public array $textureFiles = [];
+
     public function mount(Exposition $exposition): void
     {
         $this->exposition = $exposition;
@@ -55,6 +59,10 @@ class ExpositionExhibits extends Component
     {
         $userId = $this->ensureExpositionOwner();
         $this->validate();
+        $this->validate([
+            'textureFiles' => 'nullable|array|max:10',
+            'textureFiles.*' => 'file|mimes:png,jpg,jpeg,bmp,webp|max:20480',
+        ]);
 
         $position = ($this->exposition->exhibits()->max('position') ?? -1) + 1;
 
@@ -78,9 +86,21 @@ class ExpositionExhibits extends Component
         $this->modelFile->storeAs($folder, $filename.'.obj', 'public');
         $this->materialFile->storeAs($folder, $filename.'.mtl', 'public');
 
+        foreach ($this->textureFiles as $index => $texture) {
+            $originalName = $texture->getClientOriginalName();
+
+            if (! $originalName) {
+                throw ValidationException::withMessages([
+                    "textureFiles.$index" => 'Textures must retain their original filenames.',
+                ]);
+            }
+
+            $texture->storeAs($folder, basename($originalName), 'public');
+        }
+
         $exhibit->update(['media_path' => $folder]);
 
-        $this->reset(['title', 'description', 'modelFile', 'materialFile']);
+        $this->reset(['title', 'description', 'modelFile', 'materialFile', 'textureFiles']);
 
         $this->loadExhibits();
         $this->exposition->refresh();

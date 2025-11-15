@@ -97,6 +97,26 @@
                         <div wire:loading wire:target="materialFile" class="text-[10px] text-[#38bdf8]">uploading...</div>
                     </div>
 
+                    <div class="space-y-2">
+                        <label for="texture-files" class="block text-[11px] text-zinc-400">texture files (png, jpg, webp)</label>
+                        <p class="text-[10px] text-zinc-500">filenames stay untouched so the .mtl references keep working.</p>
+                        <input
+                            id="texture-files"
+                            type="file"
+                            wire:model="textureFiles"
+                            multiple
+                            accept=".png,.jpg,.jpeg,.bmp,.webp"
+                            class="w-full text-[11px] file:mr-3 file:px-3 file:py-1 file:border-0 file:bg-[#072635] file:text-[#bae6fd] file:rounded-none border border-dashed border-zinc-700 bg-[#050608] text-zinc-400"
+                        >
+                        @error('textureFiles')
+                            <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                        @enderror
+                        @error('textureFiles.*')
+                            <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                        @enderror
+                        <div wire:loading wire:target="textureFiles" class="text-[10px] text-[#38bdf8]">uploading textures...</div>
+                    </div>
+
                     <button type="submit" class="w-full px-4 py-2 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717]">
                         :: UPLOAD EXHIBIT
                     </button>
