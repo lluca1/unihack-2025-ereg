@@ -21,7 +21,7 @@
                     <p class="text-[11px] text-zinc-500">current: <span class="text-zinc-300">{{ $themeLabels[$exposition->preset_theme] ?? 'default' }} </span></p>
                     <div class="flex flex-wrap gap-2 text-[11px]">
                         <button type="button" wire:click="setPresetTheme(-1)" class="px-3 py-1 border rounded-none {{ ($exposition->preset_theme ?? -1) === -1 ? 'border-zinc-400 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
-                            default
+                            custom
                         </button>
                         <button type="button" wire:click="setPresetTheme(0)" class="px-3 py-1 border rounded-none {{ $exposition->preset_theme === 0 ? 'border-zinc-300 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
                             classic

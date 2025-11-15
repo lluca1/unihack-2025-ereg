@@ -4,11 +4,15 @@ namespace App\Livewire;
 
 use App\Models\Exposition;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class ExpositionsManager extends Component
 {
+    use WithFileUploads;
+
     /**
      * Displayable list of expositions.
      */
@@ -25,6 +29,9 @@ class ExpositionsManager extends Component
 
     #[Rule('integer|in:-1,0,1,2')]
     public int $preset_theme = -1;
+
+    #[Rule('nullable|image|max:4096')]
+    public $thumbnail;
 
     public function mount(): void
     {
@@ -47,7 +54,7 @@ class ExpositionsManager extends Component
             return;
         }
 
-        Exposition::create([
+        $exposition = Exposition::create([
             'user_id' => $userId,
             'title' => $this->title,
             'description' => $this->description ?: null,
@@ -55,7 +62,14 @@ class ExpositionsManager extends Component
             'preset_theme' => $this->preset_theme,
         ]);
 
-        $this->reset(['title', 'description', 'is_public', 'preset_theme']);
+        if ($this->thumbnail) {
+            $extension = $this->thumbnail->getClientOriginalExtension() ?: $this->thumbnail->extension();
+            $filename = 'cover-'.Str::uuid().'.'.$extension;
+            $path = $this->thumbnail->storeAs('expositions/'.$exposition->id, $filename, 'public');
+            $exposition->update(['cover_image_path' => $path]);
+        }
+
+        $this->reset(['title', 'description', 'is_public', 'preset_theme', 'thumbnail']);
         $this->is_public = true;
         $this->preset_theme = -1;
 

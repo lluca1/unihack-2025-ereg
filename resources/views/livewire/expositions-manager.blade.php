@@ -29,6 +29,33 @@
                     </div>
 
                     <div class="space-y-2">
+                        <label class="block text-[11px] text-zinc-400" for="thumbnail">thumbnail image</label>
+                        <input
+                            id="thumbnail"
+                            type="file"
+                            accept="image/*"
+                            wire:model="thumbnail"
+                            class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                        >
+                        <p class="text-[10px] text-zinc-500">4:3 aspect ratio. max 4 MB.</p>
+                        @error('thumbnail')
+                            <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                        @enderror
+                        @if ($thumbnail)
+                            <div class="mt-2 border border-zinc-700 rounded-none p-2">
+                                <p class="text-[10px] text-zinc-500 mb-2">live preview</p>
+                                <div class="w-full bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center overflow-hidden" style="aspect-ratio: 4 / 3;">
+                                    <img
+                                        src="{{ $thumbnail->temporaryUrl() }}"
+                                        alt="thumbnail preview"
+                                        class="w-full h-full object-cover"
+                                    >
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="space-y-2">
                         <label class="block text-[11px] text-zinc-400" for="description">short description</label>
                         <textarea
                             id="description"
@@ -66,10 +93,8 @@
                     <div class="space-y-2">
                         <label class="block text-[11px] text-zinc-400">preset theme</label>
                         <div class="flex flex-wrap gap-2 text-[11px]">
-                            <button type="button"
-                                    wire:click="$set('preset_theme', -1)"
-                                    class="px-3 py-1 border rounded-none {{ $preset_theme === -1 ? 'border-zinc-400 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
-                                default
+                            <button type="button" wire:click="$set('preset_theme', -1)" class="px-3 py-1 border rounded-none {{ $preset_theme === -1 ? 'border-zinc-400 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
+                                custom
                             </button>
                             <button type="button"
                                     wire:click="$set('preset_theme', 0)"
@@ -116,6 +141,7 @@
                         <p>description: <span class="text-zinc-300">{{ $description !== '' ? \Illuminate\Support\Str::limit($description, 60) : 'add a short description' }}</span></p>
                         @php($themeLabels = [-1=>'default',0=>'classic',1=>'medieval',2=>'scifi'])
                         <p>preset theme: <span class="text-zinc-300">{{ $themeLabels[$preset_theme] ?? 'default' }} ({{ $preset_theme }})</span></p>
+                        <p>expositions total: <span class="text-zinc-300">{{ $expositions->count() }}</span></p>
                     </div>
                 </div>
 
@@ -137,38 +163,25 @@
                 <span class="text-[11px] text-zinc-500">{{ $yourExpositions->count() }} total</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
-                @foreach ($yourExpositions as $exposition)
-                    <article
-                        class="border border-zinc-700 hover:border-zinc-300 transition bg-[#050608] rounded-none p-4 flex flex-col gap-3"
-                        wire:key="your-exposition-{{ $exposition->id }}"
-                    >
-                        <div class="h-32 bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500">
-                            preview_placeholder
-                        </div>
-
-                        <span class="text-zinc-200">
-                            {{ '['.str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) . ']' }}
-                            {{ strtoupper($exposition->title) }}
-                        </span>
-
-                        <p class="text-[11px] text-zinc-400 line-clamp-3">
-                            {{ $exposition->description ?: 'no description yet — add a short note.' }}
-                        </p>
-
-                        <div class="flex flex-col gap-1 text-[10px] text-zinc-500">
-                            <span>curator:
-                                <span class="text-zinc-300">
-                                    {{ '@'.($exposition->user?->name ? \Illuminate\Support\Str::slug($exposition->user->name, '_') : 'anonymous') }}
-                                </span>
-                            </span>
-                            <span>exhibits: {{ $exposition->exhibits_count }}</span>
-                            <span>status: {{ $exposition->is_public ? 'public' : 'private' }}</span>
-                        </div>
-
-                        <div class="flex flex-col gap-2 mt-2">
-                            <a href="{{ route('expositions.show', $exposition) }}"
-                               class="border border-zinc-600 hover:border-zinc-300 px-3 py-1 text-left rounded-none">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
+            @forelse ($expositions as $exposition)
+                <article class="border border-zinc-700 hover:border-zinc-300 transition bg-[#050608] rounded-none p-4 flex flex-col gap-3" wire:key="exposition-{{ $exposition->id }}">
+                    @php($isOwner = auth()->id() === $exposition->user_id)
+                    <div class="h-32 bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500">
+                        preview_placeholder
+                    </div>
+                    <span class="text-zinc-200">{{ '['.str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) . ']' }} {{ strtoupper($exposition->title) }}</span>
+                    <p class="text-[11px] text-zinc-400 line-clamp-3">
+                        {{ $exposition->description ?: 'no description yet — add a short note.' }}
+                    </p>
+                    <div class="flex flex-col gap-1 text-[10px] text-zinc-500">
+                        <span>curator: <span class="text-zinc-300">{{ '@'.($exposition->user?->name ? \Illuminate\Support\Str::slug($exposition->user->name, '_') : 'anonymous') }}</span></span>
+                        <span>exhibits: {{ $exposition->exhibits_count }}</span>
+                        <span>status: {{ $exposition->is_public ? 'public' : 'private' }}</span>
+                    </div>
+                    <div class="flex flex-col gap-2 mt-2">
+                        @if ($isOwner)
+                            <a href="{{ route('expositions.show', $exposition) }}" class="border border-zinc-600 hover:border-zinc-300 px-3 py-1 text-left rounded-none">
                                 :: MANAGE EXHIBITS
                             </a>
                             <button type="button"
