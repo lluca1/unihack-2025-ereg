@@ -27,6 +27,8 @@
                     auth_register
                 @elseif(request()->routeIs('home'))
                     home
+                @elseif(request()->routeIs('profile'))
+                    profile_editor
                 @else
                     3d_exposition_index
                 @endif
