@@ -156,6 +156,7 @@
     </form>
 
     {{-- YOUR ACTIVE EXPOSITIONS --}}
+        {{-- YOUR ACTIVE EXPOSITIONS --}}
     @if ($yourExpositions->isNotEmpty())
         <div class="mt-10">
             <div class="flex items-center justify-between mb-4">
@@ -163,25 +164,38 @@
                 <span class="text-[11px] text-zinc-500">{{ $yourExpositions->count() }} total</span>
             </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
-            @forelse ($expositions as $exposition)
-                <article class="border border-zinc-700 hover:border-zinc-300 transition bg-[#050608] rounded-none p-4 flex flex-col gap-3" wire:key="exposition-{{ $exposition->id }}">
-                    @php($isOwner = auth()->id() === $exposition->user_id)
-                    <div class="h-32 bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500">
-                        preview_placeholder
-                    </div>
-                    <span class="text-zinc-200">{{ '['.str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) . ']' }} {{ strtoupper($exposition->title) }}</span>
-                    <p class="text-[11px] text-zinc-400 line-clamp-3">
-                        {{ $exposition->description ?: 'no description yet — add a short note.' }}
-                    </p>
-                    <div class="flex flex-col gap-1 text-[10px] text-zinc-500">
-                        <span>curator: <span class="text-zinc-300">{{ '@'.($exposition->user?->name ? \Illuminate\Support\Str::slug($exposition->user->name, '_') : 'anonymous') }}</span></span>
-                        <span>exhibits: {{ $exposition->exhibits_count }}</span>
-                        <span>status: {{ $exposition->is_public ? 'public' : 'private' }}</span>
-                    </div>
-                    <div class="flex flex-col gap-2 mt-2">
-                        @if ($isOwner)
-                            <a href="{{ route('expositions.show', $exposition) }}" class="border border-zinc-600 hover:border-zinc-300 px-3 py-1 text-left rounded-none">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
+                @foreach ($yourExpositions as $exposition)
+                    <article
+                        class="border border-zinc-700 hover:border-zinc-300 transition bg-[#050608] rounded-none p-4 flex flex-col gap-3"
+                        wire:key="your-exposition-{{ $exposition->id }}"
+                    >
+                        <div class="h-32 bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500">
+                            preview_placeholder
+                        </div>
+
+                        <span class="text-zinc-200">
+                            {{ '['.str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) . ']' }}
+                            {{ strtoupper($exposition->title) }}
+                        </span>
+
+                        <p class="text-[11px] text-zinc-400 line-clamp-3">
+                            {{ $exposition->description ?: 'no description yet — add a short note.' }}
+                        </p>
+
+                        <div class="flex flex-col gap-1 text-[10px] text-zinc-500">
+                            <span>curator:
+                                <span class="text-zinc-300">
+                                    {{ '@'.($exposition->user?->name ? \Illuminate\Support\Str::slug($exposition->user->name, '_') : 'anonymous') }}
+                                </span>
+                            </span>
+                            <span>exhibits: {{ $exposition->exhibits_count }}</span>
+                            <span>status: {{ $exposition->is_public ? 'public' : 'private' }}</span>
+                        </div>
+
+                        <div class="flex flex-col gap-2 mt-2">
+                            <a href="{{ route('expositions.show', $exposition) }}"
+                               class="border border-zinc-600 hover:border-zinc-300 px-3 py-1 text-left rounded-none">
                                 :: MANAGE EXHIBITS
                             </a>
                             <button type="button"
@@ -251,3 +265,4 @@
         </div>
     @endif
 </section>
+
