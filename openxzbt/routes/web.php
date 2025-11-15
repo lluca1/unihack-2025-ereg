@@ -2,28 +2,75 @@
 
 use App\Livewire\ExpositionExhibits;
 use App\Livewire\ExpositionsManager;
-use App\Models\Exposition;
 use Illuminate\Support\Facades\Route;
+use App\Models\Exposition;
+
+/*
+|--------------------------------------------------------------------------
+| Home Page (Guest + User)
+|--------------------------------------------------------------------------
+|
+| Loads the new home.blade.php and shows:
+| - thumbnails + preface for guests
+| - full access + "your museums" for logged users
+|
+*/
 
 Route::get('/', function () {
-    $expositions = Exposition::query()
-        ->with('user')
+    $expositions = Exposition::with('user')
+        ->where('is_public', true)
         ->latest()
         ->take(6)
         ->get();
 
-    return view('pages.home', compact('expositions'));
+    return view('home', compact('expositions'));
 })->name('home');
 
-Route::view('dashboard', 'dashboard')
+
+/*
+|--------------------------------------------------------------------------
+| Dashboard (Logged in only)
+|--------------------------------------------------------------------------
+*/
+
+Route::view('/dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::view('profile', 'profile')
+
+/*
+|--------------------------------------------------------------------------
+| Profile
+|--------------------------------------------------------------------------
+*/
+
+Route::view('/profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
-    
-Route::get('/expositions', ExpositionsManager::class)->name('expositions.index');
-Route::get('/expositions/{exposition}', ExpositionExhibits::class)->name('expositions.show');
+
+
+/*
+|--------------------------------------------------------------------------
+| Expositions 
+|--------------------------------------------------------------------------
+|
+| Guests can preview the thumbnails in home.blade.php,
+| but these pages require login:
+| - /expositions
+| - /expositions/{id}
+|
+*/
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/expositions', ExpositionsManager::class)->name('expositions.index');
+    Route::get('/expositions/{exposition}', ExpositionExhibits::class)->name('expositions.show');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes (Breeze)
+|--------------------------------------------------------------------------
+*/
 
 require __DIR__.'/auth.php';
