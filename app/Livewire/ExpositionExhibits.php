@@ -19,6 +19,8 @@ class ExpositionExhibits extends Component
 
     public $exhibits = [];
 
+    public bool $isOwner = false;
+
     #[Rule('required|string|max:255')]
     public string $title = '';
 
@@ -31,6 +33,12 @@ class ExpositionExhibits extends Component
     public function mount(Exposition $exposition): void
     {
         $this->exposition = $exposition;
+        $this->isOwner = Auth::id() === $this->exposition->user_id;
+
+        if (! $this->isOwner && ! $this->exposition->is_public) {
+            abort(403);
+        }
+
         $this->loadExhibits();
     }
 
@@ -41,14 +49,8 @@ class ExpositionExhibits extends Component
 
     public function save(): void
     {
+        $userId = $this->ensureExpositionOwner();
         $this->validate();
-
-        $userId = Auth::id();
-
-        if (! $userId) {
-            $this->addError('title', 'You must be logged in to upload exhibits.');
-            return;
-        }
 
         $position = ($this->exposition->exhibits()->max('position') ?? -1) + 1;
 
@@ -72,10 +74,15 @@ class ExpositionExhibits extends Component
 
     public function delete(int $exhibitId): void
     {
+        $userId = $this->ensureExpositionOwner();
         $exhibit = $this->exposition->exhibits()->whereKey($exhibitId)->first();
 
         if (! $exhibit) {
             return;
+        }
+
+        if ($exhibit->user_id !== $userId) {
+            abort(403);
         }
 
         if ($exhibit->media_path) {
@@ -91,5 +98,16 @@ class ExpositionExhibits extends Component
     private function loadExhibits(): void
     {
         $this->exhibits = $this->exposition->exhibits()->get();
+    }
+
+    private function ensureExpositionOwner(): int
+    {
+        $userId = Auth::id();
+
+        if (! $userId || $this->exposition->user_id !== $userId) {
+            abort(403);
+        }
+
+        return $userId;
     }
 }

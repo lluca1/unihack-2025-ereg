@@ -92,6 +92,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
             @forelse ($expositions as $exposition)
                 <article class="border border-zinc-700 hover:border-zinc-300 transition bg-[#050608] rounded-none p-4 flex flex-col gap-3" wire:key="exposition-{{ $exposition->id }}">
+                    @php($isOwner = auth()->id() === $exposition->user_id)
                     <div class="h-32 bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500">
                         preview_placeholder
                     </div>
@@ -105,12 +106,18 @@
                         <span>status: {{ $exposition->is_public ? 'public' : 'private' }}</span>
                     </div>
                     <div class="flex flex-col gap-2 mt-2">
-                        <a href="{{ route('expositions.show', $exposition) }}" class="border border-zinc-600 hover:border-zinc-300 px-3 py-1 text-left rounded-none">
-                            :: MANAGE EXHIBITS
-                        </a>
-                        <button type="button" wire:click="delete({{ $exposition->id }})" class="border border-[#f97373]/80 text-[#ffecec] px-3 py-1 rounded-none hover:bg-[#5b1010]/50">
-                            :: DELETE EXPOSITION
-                        </button>
+                        @if ($isOwner)
+                            <a href="{{ route('expositions.show', $exposition) }}" class="border border-zinc-600 hover:border-zinc-300 px-3 py-1 text-left rounded-none">
+                                :: MANAGE EXHIBITS
+                            </a>
+                            <button type="button" wire:click="delete({{ $exposition->id }})" class="border border-[#f97373]/80 text-[#ffecec] px-3 py-1 rounded-none hover:bg-[#5b1010]/50">
+                                :: DELETE EXPOSITION
+                            </button>
+                        @else
+                            <p class="text-[11px] text-zinc-500 border border-dashed border-zinc-700 rounded-none px-3 py-2">
+                                view only
+                            </p>
+                        @endif
                     </div>
                 </article>
             @empty

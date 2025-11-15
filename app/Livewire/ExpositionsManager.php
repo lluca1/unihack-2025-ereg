@@ -59,15 +59,42 @@ class ExpositionsManager extends Component
 
     public function delete(int $expositionId): void
     {
-        Exposition::whereKey($expositionId)->delete();
+        $userId = Auth::id();
+
+        if (! $userId) {
+            abort(403);
+        }
+
+        $exposition = Exposition::whereKey($expositionId)->first();
+
+        if (! $exposition) {
+            return;
+        }
+
+        if ($exposition->user_id !== $userId) {
+            abort(403);
+        }
+
+        $exposition->delete();
 
         $this->loadExpositions();
     }
 
     private function loadExpositions(): void
     {
+        $userId = Auth::id();
+
         $this->expositions = Exposition::query()
+            ->when($userId, function ($query) use ($userId) {
+                $query->where(function ($query) use ($userId) {
+                    $query->where('is_public', true)
+                        ->orWhere('user_id', $userId);
+                });
+            }, function ($query) {
+                $query->where('is_public', true);
+            })
             ->latest()
+            ->with(['user:id,name'])
             ->withCount('exhibits')
             ->get();
     }
