@@ -6,6 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'openxzbt') }}</title>
+        <link rel="icon" type="image/svg+xml" href="{{ asset('logo.svg') }}">
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
