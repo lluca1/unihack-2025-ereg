@@ -18,6 +18,33 @@
                     </div>
 
                     <div class="space-y-2">
+                        <label class="block text-[11px] text-zinc-400" for="thumbnail">thumbnail image</label>
+                        <input
+                            id="thumbnail"
+                            type="file"
+                            accept="image/*"
+                            wire:model="thumbnail"
+                            class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                        >
+                        <p class="text-[10px] text-zinc-500">4:3 aspect ratio. max 4 MB.</p>
+                        @error('thumbnail')
+                            <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                        @enderror
+                        @if ($thumbnail)
+                            <div class="mt-2 border border-zinc-700 rounded-none p-2">
+                                <p class="text-[10px] text-zinc-500 mb-2">live preview</p>
+                                <div class="w-full bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center overflow-hidden" style="aspect-ratio: 4 / 3;">
+                                    <img
+                                        src="{{ $thumbnail->temporaryUrl() }}"
+                                        alt="thumbnail preview"
+                                        class="w-full h-full object-cover"
+                                    >
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="space-y-2">
                         <label class="block text-[11px] text-zinc-400" for="description">short description</label>
                         <textarea
                             id="description"
@@ -52,7 +79,7 @@
                         <label class="block text-[11px] text-zinc-400">preset theme</label>
                         <div class="flex flex-wrap gap-2 text-[11px]">
                             <button type="button" wire:click="$set('preset_theme', -1)" class="px-3 py-1 border rounded-none {{ $preset_theme === -1 ? 'border-zinc-400 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
-                                default (-1)
+                                custom (-1)
                             </button>
                             <button type="button" wire:click="$set('preset_theme', 0)" class="px-3 py-1 border rounded-none {{ $preset_theme === 0 ? 'border-zinc-300 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
                                 0 classic
@@ -92,6 +119,7 @@
                         <p>description: <span class="text-zinc-300">{{ $description !== '' ? \Illuminate\Support\Str::limit($description, 60) : 'add a short description' }}</span></p>
                         @php($themeLabels = [-1=>'default',0=>'classic',1=>'medieval',2=>'scifi'])
                         <p>preset theme: <span class="text-zinc-300">{{ $themeLabels[$preset_theme] ?? 'default' }} ({{ $preset_theme }})</span></p>
+                        <p>thumbnail: <span class="text-zinc-300">{{ $thumbnail ? 'ready to upload' : 'none yet' }}</span></p>
                         <p>expositions total: <span class="text-zinc-300">{{ $expositions->count() }}</span></p>
                     </div>
                 </div>
@@ -116,8 +144,16 @@
             @forelse ($expositions as $exposition)
                 <article class="border border-zinc-700 hover:border-zinc-300 transition bg-[#050608] rounded-none p-4 flex flex-col gap-3" wire:key="exposition-{{ $exposition->id }}">
                     @php($isOwner = auth()->id() === $exposition->user_id)
-                    <div class="h-32 bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500">
-                        preview_placeholder
+                    <div class="w-full bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500 overflow-hidden" style="aspect-ratio: 4 / 3;">
+                        @if ($exposition->cover_image_path)
+                            <img
+                                src="{{ \Illuminate\Support\Facades\Storage::url($exposition->cover_image_path) }}"
+                                alt="{{ $exposition->title }} cover"
+                                class="w-full h-full object-cover"
+                            >
+                        @else
+                            preview_placeholder
+                        @endif
                     </div>
                     <span class="text-zinc-200">{{ '['.str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) . ']' }} {{ strtoupper($exposition->title) }}</span>
                     <p class="text-[11px] text-zinc-400 line-clamp-3">
