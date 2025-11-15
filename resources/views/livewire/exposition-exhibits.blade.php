@@ -36,7 +36,7 @@
                 </div>
 
                 <h2 class="text-[12px] font-semibold tracking-tight text-zinc-100">upload new exhibit</h2>
-                <p class="text-[11px] text-zinc-500">drag a 3d model (obj). we keep the file path so the 3d client can pull it later.</p>
+                <p class="text-[11px] text-zinc-500">drop the OBJ geometry and its matching MTL so the 3d client can retrieve both later.</p>
 
                 <form wire:submit.prevent="save" enctype="multipart/form-data" class="space-y-4">
                     <div class="space-y-2">
@@ -82,6 +82,21 @@
                         <div wire:loading wire:target="modelFile" class="text-[10px] text-[#38bdf8]">uploading...</div>
                     </div>
 
+                    <div class="space-y-2">
+                        <label for="material-file" class="block text-[11px] text-zinc-400">materials file (mtl)</label>
+                        <input
+                            id="material-file"
+                            type="file"
+                            wire:model="materialFile"
+                            accept=".mtl"
+                            class="w-full text-[11px] file:mr-3 file:px-3 file:py-1 file:border-0 file:bg-[#072635] file:text-[#bae6fd] file:rounded-none border border-dashed border-zinc-700 bg-[#050608] text-zinc-400"
+                        >
+                        @error('materialFile')
+                            <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                        @enderror
+                        <div wire:loading wire:target="materialFile" class="text-[10px] text-[#38bdf8]">uploading...</div>
+                    </div>
+
                     <button type="submit" class="w-full px-4 py-2 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717]">
                         :: UPLOAD EXHIBIT
                     </button>
@@ -106,11 +121,11 @@
                     <article class="border border-zinc-700 bg-[#050608] rounded-none p-4 space-y-2" wire:key="exhibit-{{ $exhibit->id }}">
                         <div class="flex items-center justify-between text-[10px] text-zinc-500">
                             <span>uploaded {{ $exhibit->created_at->diffForHumans() }}</span>
-                            <span>media: {{ strtoupper(pathinfo($exhibit->media_path, PATHINFO_EXTENSION)) }}</span>
+                            <span>bundle: OBJ + MTL</span>
                         </div>
                         <h3 class="text-[14px] text-zinc-100 font-semibold tracking-tight">{{ $exhibit->title }}</h3>
                         <p class="text-[11px] text-zinc-400">{{ $exhibit->description ?: 'no description — add one when needed.' }}</p>
-                        <p class="text-[10px] text-zinc-500">stored at: <span class="text-zinc-300">{{ $exhibit->media_path }}</span></p>
+                        <p class="text-[10px] text-zinc-500">stored under: <span class="text-zinc-300">{{ $exhibit->media_path }}</span></p>
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
                             <span class="text-[10px] text-zinc-500">position: {{ $exhibit->position ?? 0 }}</span>
                             @if ($isOwner)

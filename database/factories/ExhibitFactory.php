@@ -22,9 +22,9 @@ class ExhibitFactory extends Factory
             'title' => fake()->words(2, true),
             'description' => fake()->sentence(10),
             'media_type' => '3d-model',
-            'media_path' => 'models/'.$this->faker->uuid.'.obj',
+            'media_path' => 'models/'.$this->faker->numberBetween(1, 9999),
             'thumbnail_path' => null,
-            'mime_type' => 'text/plain',
+            'mime_type' => 'model/obj',
             'position' => fake()->numberBetween(0, 10),
         ];
     }

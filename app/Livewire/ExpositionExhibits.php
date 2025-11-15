@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Exposition;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
@@ -30,6 +31,9 @@ class ExpositionExhibits extends Component
     #[Rule('required|file|mimes:obj|max:51200')]
     public $modelFile;
 
+    #[Rule('required|file|mimes:mtl|max:51200')]
+    public $materialFile;
+
     public function mount(Exposition $exposition): void
     {
         $this->exposition = $exposition;
@@ -54,19 +58,29 @@ class ExpositionExhibits extends Component
 
         $position = ($this->exposition->exhibits()->max('position') ?? -1) + 1;
 
-        $path = $this->modelFile->store('models', 'public');
+        $mimeType = $this->modelFile->getMimeType();
 
-        $this->exposition->exhibits()->create([
+        $exhibit = $this->exposition->exhibits()->create([
             'user_id' => $userId,
             'title' => $this->title,
             'description' => $this->description ?: null,
             'media_type' => '3d-model',
-            'media_path' => $path,
-            'mime_type' => $this->modelFile->getMimeType(),
+            'media_path' => '',
+            'mime_type' => $mimeType,
             'position' => $position,
         ]);
 
-        $this->reset(['title', 'description', 'modelFile']);
+        $folder = 'models/'.$exhibit->id;
+        $filename = Str::slug($this->title, '_') ?: 'exhibit_'.$exhibit->id;
+
+        Storage::disk('public')->makeDirectory($folder);
+
+        $this->modelFile->storeAs($folder, $filename.'.obj', 'public');
+        $this->materialFile->storeAs($folder, $filename.'.mtl', 'public');
+
+        $exhibit->update(['media_path' => $folder]);
+
+        $this->reset(['title', 'description', 'modelFile', 'materialFile']);
 
         $this->loadExhibits();
         $this->exposition->refresh();
@@ -86,7 +100,11 @@ class ExpositionExhibits extends Component
         }
 
         if ($exhibit->media_path) {
-            Storage::disk('public')->delete($exhibit->media_path);
+            if (Str::endsWith($exhibit->media_path, '.obj')) {
+                Storage::disk('public')->delete($exhibit->media_path);
+            } else {
+                Storage::disk('public')->deleteDirectory($exhibit->media_path);
+            }
         }
 
         $exhibit->delete();
