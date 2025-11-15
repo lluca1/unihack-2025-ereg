@@ -139,7 +139,7 @@
                         <p>title: <span class="text-zinc-300">{{ $title !== '' ? $title : 'pending…' }}</span></p>
                         <p>status: <span class="text-zinc-300">{{ $is_public ? 'public' : 'private' }}</span></p>
                         <p>description: <span class="text-zinc-300">{{ $description !== '' ? \Illuminate\Support\Str::limit($description, 60) : 'add a short description' }}</span></p>
-                        @php($themeLabels = [-1=>'default',0=>'classic',1=>'medieval',2=>'scifi'])
+                        @php($themeLabels = [-1=>'custom',0=>'classic',1=>'medieval',2=>'scifi'])
                         <p>preset theme: <span class="text-zinc-300">{{ $themeLabels[$preset_theme] ?? 'default' }} ({{ $preset_theme }})</span></p>
                         <p>thumbnail: <span class="text-zinc-300">{{ $thumbnail ? 'ready to upload' : 'none yet' }}</span></p>
                         <p>expositions total: <span class="text-zinc-300">{{ $expositions->count() }}</span></p>
