@@ -37,7 +37,7 @@ new #[Layout('layouts.guest')] class extends Component
 <div class="w-full sm:max-w-md mx-auto mt-20
             border border-white/20 bg-[#0a0a0a] px-8 py-10
             shadow-[0_0_15px_rgba(255,255,255,0.05)]
-            text-[13px] tracking-tight font-mono">
+            text-[13px] tracking-tight">
 
     <!-- Header -->
     <h2 class="text-white text-lg font-semibold mb-6 border-b border-white/10 pb-2">
@@ -150,4 +150,3 @@ new #[Layout('layouts.guest')] class extends Component
 
     </form>
 </div>
-

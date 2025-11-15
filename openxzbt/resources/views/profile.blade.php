@@ -1,6 +1,6 @@
 <x-app-layout>
 
-    <div class="max-w-4xl mx-auto mt-12 mb-24 font-mono tracking-tight">
+    <div class="max-w-4xl mx-auto mt-12 mb-24 tracking-tight">
 
         <div class="border border-white/10 bg-black/40 backdrop-blur-sm p-10 rounded-none shadow-xl">
 

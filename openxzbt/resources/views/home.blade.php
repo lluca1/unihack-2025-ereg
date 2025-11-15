@@ -34,7 +34,7 @@
 
 
     {{-- MAIN PAGE WRAPPER --}}
-    <div class="max-w-7xl mx-auto px-6 py-10 space-y-16 font-['JetBrains_Mono']">
+    <div class="max-w-7xl mx-auto px-6 py-10 space-y-16">
 
         {{-- HERO / TOP PANEL --}}
         <section class="border border-white/10 bg-[#0a0a0a] p-6 md:p-8">

@@ -7,13 +7,11 @@
 
         <title>{{ config('app.name', 'openxzbt') }}</title>
 
-        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
-
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
     </head>
 
-    <body class="bg-[#050608] text-zinc-100 font-['JetBrains_Mono'] min-h-screen antialiased">
+    <body class="bg-[#050608] text-zinc-100 min-h-screen antialiased">
         <div class="min-h-screen flex flex-col">
 
             {{-- =============================================================
