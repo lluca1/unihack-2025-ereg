@@ -142,7 +142,6 @@
                         @php($themeLabels = [-1=>'custom',0=>'classic',1=>'medieval',2=>'scifi'])
                         <p>preset theme: <span class="text-zinc-300">{{ $themeLabels[$preset_theme] ?? 'default' }} ({{ $preset_theme }})</span></p>
                         <p>thumbnail: <span class="text-zinc-300">{{ $thumbnail ? 'ready to upload' : 'none yet' }}</span></p>
-                        <p>expositions total: <span class="text-zinc-300">{{ $expositions->count() }}</span></p>
                     </div>
                 </div>
 
