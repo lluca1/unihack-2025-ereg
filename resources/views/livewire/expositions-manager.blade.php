@@ -141,6 +141,7 @@
                         <p>description: <span class="text-zinc-300">{{ $description !== '' ? \Illuminate\Support\Str::limit($description, 60) : 'add a short description' }}</span></p>
                         @php($themeLabels = [-1=>'default',0=>'classic',1=>'medieval',2=>'scifi'])
                         <p>preset theme: <span class="text-zinc-300">{{ $themeLabels[$preset_theme] ?? 'default' }} ({{ $preset_theme }})</span></p>
+                        <p>thumbnail: <span class="text-zinc-300">{{ $thumbnail ? 'ready to upload' : 'none yet' }}</span></p>
                         <p>expositions total: <span class="text-zinc-300">{{ $expositions->count() }}</span></p>
                     </div>
                 </div>
@@ -156,7 +157,6 @@
     </form>
 
     {{-- YOUR ACTIVE EXPOSITIONS --}}
-        {{-- YOUR ACTIVE EXPOSITIONS --}}
     @if ($yourExpositions->isNotEmpty())
         <div class="mt-10">
             <div class="flex items-center justify-between mb-4">
@@ -170,8 +170,16 @@
                         class="border border-zinc-700 hover:border-zinc-300 transition bg-[#050608] rounded-none p-4 flex flex-col gap-3"
                         wire:key="your-exposition-{{ $exposition->id }}"
                     >
-                        <div class="h-32 bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500">
-                            preview_placeholder
+                        <div class="w-full bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500 overflow-hidden" style="aspect-ratio: 4 / 3;">
+                            @if ($exposition->cover_image_path)
+                                <img
+                                    src="{{ \Illuminate\Support\Facades\Storage::url($exposition->cover_image_path) }}"
+                                    alt="{{ $exposition->title }} cover"
+                                    class="w-full h-full object-cover"
+                                >
+                            @else
+                                preview_placeholder
+                            @endif
                         </div>
 
                         <span class="text-zinc-200">
@@ -224,8 +232,16 @@
                         class="border border-zinc-700 hover:border-zinc-300 transition bg-[#050608] rounded-none p-4 flex flex-col gap-3"
                         wire:key="other-exposition-{{ $exposition->id }}"
                     >
-                        <div class="h-32 bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500">
-                            preview_placeholder
+                        <div class="w-full bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500 overflow-hidden" style="aspect-ratio: 4 / 3;">
+                            @if ($exposition->cover_image_path)
+                                <img
+                                    src="{{ \Illuminate\Support\Facades\Storage::url($exposition->cover_image_path) }}"
+                                    alt="{{ $exposition->title }} cover"
+                                    class="w-full h-full object-cover"
+                                >
+                            @else
+                                preview_placeholder
+                            @endif
                         </div>
 
                         <span class="text-zinc-200">
@@ -265,4 +281,3 @@
         </div>
     @endif
 </section>
-
