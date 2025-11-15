@@ -38,6 +38,9 @@ class ExpositionExhibits extends Component
     #[Rule('nullable|array|max:10')]
     public array $textureFiles = [];
 
+    #[Rule('nullable|image|max:4096')]
+    public $thumbnail;
+
     public function mount(Exposition $exposition): void
     {
         $this->exposition = $exposition;
@@ -149,6 +152,43 @@ class ExpositionExhibits extends Component
     private function loadExhibits(): void
     {
         $this->exhibits = $this->exposition->exhibits()->get();
+    }
+
+    public function saveThumbnail(): void
+    {
+        $userId = $this->ensureExpositionOwner();
+        $this->validate(['thumbnail' => 'nullable|image|max:4096']);
+
+        if (! $this->thumbnail) {
+            return;
+        }
+
+        // Delete old thumbnail if it exists
+        if ($this->exposition->cover_image_path) {
+            Storage::disk('public')->delete($this->exposition->cover_image_path);
+        }
+
+        $extension = $this->thumbnail->getClientOriginalExtension() ?: $this->thumbnail->extension();
+        $filename = 'cover-'.Str::uuid().'.'.$extension;
+        $path = $this->thumbnail->storeAs('expositions/'.$this->exposition->id, $filename, 'public');
+
+        $this->exposition->update(['cover_image_path' => $path]);
+        $this->exposition->refresh();
+
+        $this->reset(['thumbnail']);
+    }
+
+    public function clearThumbnail(): void
+    {
+        $userId = $this->ensureExpositionOwner();
+
+        if ($this->exposition->cover_image_path) {
+            Storage::disk('public')->delete($this->exposition->cover_image_path);
+            $this->exposition->update(['cover_image_path' => null]);
+            $this->exposition->refresh();
+        }
+
+        $this->reset(['thumbnail']);
     }
 
     private function ensureExpositionOwner(): int
