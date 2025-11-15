@@ -1,4 +1,15 @@
 <section class="max-w-6xl mx-auto px-6 pb-20 space-y-10">
+    @php
+        // split into "yours" vs "others" by user_id
+        $yourExpositions = isset($expositions)
+            ? $expositions->where('user_id', auth()->id())
+            : collect();
+
+        $otherExpositions = isset($expositions)
+            ? $expositions->where('user_id', '!=', auth()->id())
+            : collect();
+    @endphp
+
     <form wire:submit.prevent="save">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 text-xs">
             <div class="lg:col-span-2 space-y-6">
@@ -36,10 +47,14 @@
                     <div class="space-y-2">
                         <label class="block text-[11px] text-zinc-400">visibility</label>
                         <div class="flex flex-wrap gap-2 text-[11px]">
-                            <button type="button" wire:click="$set('is_public', true)" class="px-3 py-1 border rounded-none {{ $is_public ? 'border-[#22c55e]/60 bg-[#052713] text-[#bbf7d0]' : 'border-white/20 text-white/50 hover:text-white' }}">
+                            <button type="button"
+                                    wire:click="$set('is_public', true)"
+                                    class="px-3 py-1 border rounded-none {{ $is_public ? 'border-[#22c55e]/60 bg-[#052713] text-[#bbf7d0]' : 'border-white/20 text-white/50 hover:text-white' }}">
                                 public (featured)
                             </button>
-                            <button type="button" wire:click="$set('is_public', false)" class="px-3 py-1 border rounded-none {{ ! $is_public ? 'border-[#f97373]/80 bg-[#5b1010] text-[#ffecec]' : 'border-white/20 text-white/50 hover:text-white' }}">
+                            <button type="button"
+                                    wire:click="$set('is_public', false)"
+                                    class="px-3 py-1 border rounded-none {{ ! $is_public ? 'border-[#f97373]/80 bg-[#5b1010] text-[#ffecec]' : 'border-white/20 text-white/50 hover:text-white' }}">
                                 private (only you)
                             </button>
                         </div>
@@ -51,17 +66,25 @@
                     <div class="space-y-2">
                         <label class="block text-[11px] text-zinc-400">preset theme</label>
                         <div class="flex flex-wrap gap-2 text-[11px]">
-                            <button type="button" wire:click="$set('preset_theme', -1)" class="px-3 py-1 border rounded-none {{ $preset_theme === -1 ? 'border-zinc-400 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
-                                default (-1)
+                            <button type="button"
+                                    wire:click="$set('preset_theme', -1)"
+                                    class="px-3 py-1 border rounded-none {{ $preset_theme === -1 ? 'border-zinc-400 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
+                                default
                             </button>
-                            <button type="button" wire:click="$set('preset_theme', 0)" class="px-3 py-1 border rounded-none {{ $preset_theme === 0 ? 'border-zinc-300 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
-                                0 classic
+                            <button type="button"
+                                    wire:click="$set('preset_theme', 0)"
+                                    class="px-3 py-1 border rounded-none {{ $preset_theme === 0 ? 'border-zinc-300 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
+                                classic
                             </button>
-                            <button type="button" wire:click="$set('preset_theme', 1)" class="px-3 py-1 border rounded-none {{ $preset_theme === 1 ? 'border-zinc-300 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
-                                1 medieval
+                            <button type="button"
+                                    wire:click="$set('preset_theme', 1)"
+                                    class="px-3 py-1 border rounded-none {{ $preset_theme === 1 ? 'border-zinc-300 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
+                                medieval
                             </button>
-                            <button type="button" wire:click="$set('preset_theme', 2)" class="px-3 py-1 border rounded-none {{ $preset_theme === 2 ? 'border-zinc-300 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
-                                2 scifi
+                            <button type="button"
+                                    wire:click="$set('preset_theme', 2)"
+                                    class="px-3 py-1 border rounded-none {{ $preset_theme === 2 ? 'border-zinc-300 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
+                                scifi
                             </button>
                         </div>
                         @error('preset_theme')
@@ -72,7 +95,8 @@
                     <div class="space-y-2">
                         <label class="block text-[11px] text-zinc-400">exposition actions</label>
                         <div class="flex flex-col md:flex-row gap-2">
-                            <button type="submit" class="px-4 py-2 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717]">
+                            <button type="submit"
+                                    class="px-4 py-2 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717]">
                                 :: SAVE EXPOSITION
                             </button>
                         </div>
@@ -92,7 +116,6 @@
                         <p>description: <span class="text-zinc-300">{{ $description !== '' ? \Illuminate\Support\Str::limit($description, 60) : 'add a short description' }}</span></p>
                         @php($themeLabels = [-1=>'default',0=>'classic',1=>'medieval',2=>'scifi'])
                         <p>preset theme: <span class="text-zinc-300">{{ $themeLabels[$preset_theme] ?? 'default' }} ({{ $preset_theme }})</span></p>
-                        <p>expositions total: <span class="text-zinc-300">{{ $expositions->count() }}</span></p>
                     </div>
                 </div>
 
@@ -106,48 +129,112 @@
         </div>
     </form>
 
-    <div>
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-sm font-semibold tracking-tight text-zinc-100">ACTIVE EXPOSITIONS</h2>
-            <span class="text-[11px] text-zinc-500">{{ $expositions->count() }} total</span>
-        </div>
+    {{-- YOUR ACTIVE EXPOSITIONS --}}
+    @if ($yourExpositions->isNotEmpty())
+        <div class="mt-10">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-sm font-semibold tracking-tight text-zinc-100">your active expositions</h2>
+                <span class="text-[11px] text-zinc-500">{{ $yourExpositions->count() }} total</span>
+            </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
-            @forelse ($expositions as $exposition)
-                <article class="border border-zinc-700 hover:border-zinc-300 transition bg-[#050608] rounded-none p-4 flex flex-col gap-3" wire:key="exposition-{{ $exposition->id }}">
-                    @php($isOwner = auth()->id() === $exposition->user_id)
-                    <div class="h-32 bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500">
-                        preview_placeholder
-                    </div>
-                    <span class="text-zinc-200">{{ '['.str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) . ']' }} {{ strtoupper($exposition->title) }}</span>
-                    <p class="text-[11px] text-zinc-400 line-clamp-3">
-                        {{ $exposition->description ?: 'no description yet — add a short note.' }}
-                    </p>
-                    <div class="flex flex-col gap-1 text-[10px] text-zinc-500">
-                        <span>curator: <span class="text-zinc-300">{{ '@'.($exposition->user?->name ? \Illuminate\Support\Str::slug($exposition->user->name, '_') : 'anonymous') }}</span></span>
-                        <span>exhibits: {{ $exposition->exhibits_count }}</span>
-                        <span>status: {{ $exposition->is_public ? 'public' : 'private' }}</span>
-                    </div>
-                    <div class="flex flex-col gap-2 mt-2">
-                        @if ($isOwner)
-                            <a href="{{ route('expositions.show', $exposition) }}" class="border border-zinc-600 hover:border-zinc-300 px-3 py-1 text-left rounded-none">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
+                @foreach ($yourExpositions as $exposition)
+                    <article
+                        class="border border-zinc-700 hover:border-zinc-300 transition bg-[#050608] rounded-none p-4 flex flex-col gap-3"
+                        wire:key="your-exposition-{{ $exposition->id }}"
+                    >
+                        <div class="h-32 bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500">
+                            preview_placeholder
+                        </div>
+
+                        <span class="text-zinc-200">
+                            {{ '['.str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) . ']' }}
+                            {{ strtoupper($exposition->title) }}
+                        </span>
+
+                        <p class="text-[11px] text-zinc-400 line-clamp-3">
+                            {{ $exposition->description ?: 'no description yet — add a short note.' }}
+                        </p>
+
+                        <div class="flex flex-col gap-1 text-[10px] text-zinc-500">
+                            <span>curator:
+                                <span class="text-zinc-300">
+                                    {{ '@'.($exposition->user?->name ? \Illuminate\Support\Str::slug($exposition->user->name, '_') : 'anonymous') }}
+                                </span>
+                            </span>
+                            <span>exhibits: {{ $exposition->exhibits_count }}</span>
+                            <span>status: {{ $exposition->is_public ? 'public' : 'private' }}</span>
+                        </div>
+
+                        <div class="flex flex-col gap-2 mt-2">
+                            <a href="{{ route('expositions.show', $exposition) }}"
+                               class="border border-zinc-600 hover:border-zinc-300 px-3 py-1 text-left rounded-none">
                                 :: MANAGE EXHIBITS
                             </a>
-                            <button type="button" wire:click="delete({{ $exposition->id }})" class="border border-[#f97373]/80 text-[#ffecec] px-3 py-1 rounded-none hover:bg-[#5b1010]/50">
+                            <button type="button"
+                                    wire:click="delete({{ $exposition->id }})"
+                                    class="border border-[#f97373]/80 text-[#ffecec] px-3 py-1 rounded-none hover:bg-[#5b1010]/50">
                                 :: DELETE EXPOSITION
                             </button>
-                        @else
-                            <p class="text-[11px] text-zinc-500 border border-dashed border-zinc-700 rounded-none px-3 py-2">
-                                view only
-                            </p>
-                        @endif
-                    </div>
-                </article>
-            @empty
-                <div class="col-span-full border border-dashed border-zinc-700 rounded-none p-6 text-center text-[12px] text-zinc-400">
-                    no expositions yet. start by creating one above.
-                </div>
-            @endforelse
+                        </div>
+                    </article>
+                @endforeach
+            </div>
         </div>
-    </div>
+    @endif
+
+    {{-- OTHER USERS' EXPOSITIONS (VIEW-ONLY) --}}
+    @if ($otherExpositions->isNotEmpty())
+        <div class="mt-10">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-sm font-semibold tracking-tight text-zinc-100">other expositions</h2>
+                <span class="text-[11px] text-zinc-500">{{ $otherExpositions->count() }} total</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
+                @foreach ($otherExpositions as $exposition)
+                    <article
+                        class="border border-zinc-700 hover:border-zinc-300 transition bg-[#050608] rounded-none p-4 flex flex-col gap-3"
+                        wire:key="other-exposition-{{ $exposition->id }}"
+                    >
+                        <div class="h-32 bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500">
+                            preview_placeholder
+                        </div>
+
+                        <span class="text-zinc-200">
+                            {{ '['.str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) . ']' }}
+                            {{ strtoupper($exposition->title) }}
+                        </span>
+
+                        <p class="text-[11px] text-zinc-400 line-clamp-3">
+                            {{ $exposition->description ?: 'no description yet — add a short note.' }}
+                        </p>
+
+                        <div class="flex flex-col gap-1 text-[10px] text-zinc-500">
+                            <span>curator:
+                                <span class="text-zinc-300">
+                                    {{ '@'.($exposition->user?->name ? \Illuminate\Support\Str::slug($exposition->user->name, '_') : 'anonymous') }}
+                                </span>
+                            </span>
+                            <span>exhibits: {{ $exposition->exhibits_count }}</span>
+                            <span>status: {{ $exposition->is_public ? 'public' : 'private' }}</span>
+                        </div>
+
+                        <div class="flex flex-col gap-2 mt-2">
+                            <a href="{{ route('expositions.show', $exposition) }}"
+                               class="border border-[#f97373]/70 bg-[#5b1010] text-[#ffecec] px-3 py-1 rounded-none hover:bg-[#7f1717]/80 text-left">
+                                view_details →
+                            </a>
+                        </div>
+                    </article>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
+    @if ($yourExpositions->isEmpty() && $otherExpositions->isEmpty())
+        <div class="border border-dashed border-zinc-700 rounded-none p-6 text-center text-[12px] text-zinc-400 mt-8">
+            no expositions yet. start by creating one above.
+        </div>
+    @endif
 </section>

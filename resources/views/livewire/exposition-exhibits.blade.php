@@ -18,19 +18,19 @@
                 @php($themeLabels = [-1=>'default',0=>'classic',1=>'medieval',2=>'scifi'])
                 <div class="space-y-2">
                     <h2 class="text-[12px] font-semibold tracking-tight text-zinc-100">exposition theme preset</h2>
-                    <p class="text-[11px] text-zinc-500">current: <span class="text-zinc-300">{{ $themeLabels[$exposition->preset_theme] ?? 'default' }} ({{ $exposition->preset_theme ?? -1 }})</span></p>
+                    <p class="text-[11px] text-zinc-500">current: <span class="text-zinc-300">{{ $themeLabels[$exposition->preset_theme] ?? 'default' }} </span></p>
                     <div class="flex flex-wrap gap-2 text-[11px]">
                         <button type="button" wire:click="setPresetTheme(-1)" class="px-3 py-1 border rounded-none {{ ($exposition->preset_theme ?? -1) === -1 ? 'border-zinc-400 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
-                            default (-1)
+                            default
                         </button>
                         <button type="button" wire:click="setPresetTheme(0)" class="px-3 py-1 border rounded-none {{ $exposition->preset_theme === 0 ? 'border-zinc-300 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
-                            0 classic
+                            classic
                         </button>
                         <button type="button" wire:click="setPresetTheme(1)" class="px-3 py-1 border rounded-none {{ $exposition->preset_theme === 1 ? 'border-zinc-300 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
-                            1 medieval
+                            medieval
                         </button>
                         <button type="button" wire:click="setPresetTheme(2)" class="px-3 py-1 border rounded-none {{ $exposition->preset_theme === 2 ? 'border-zinc-300 bg-zinc-800/50 text-zinc-200' : 'border-white/20 text-white/50 hover:text-white' }}">
-                            2 scifi
+                            scifi
                         </button>
                     </div>
                 </div>
